@@ -18,12 +18,13 @@ import java.util.Date;
 
 import com.auth0.jwt.JWT;
 
+import static com.backend.usuario.constants.SecurityConstants.*;
+
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager ;
-
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager){
         this.authenticationManager = authenticationManager;
-        setFilterProcessesUrl("/api/login");
+        setFilterProcessesUrl(SIGN_UP_URL);
     }
     public Authentication authentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)throws AuthenticationException{
         try {
@@ -40,8 +41,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
     @Override
     protected void successfulAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain, Authentication authentication)throws IOException{
-        long EXPIRATION_TIME = 50000;
-        String SECRET = "Bearer ";
         String token = JWT.create()
                 .withSubject(((UserRequest) authentication.getPrincipal()).getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -51,6 +50,4 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         httpServletResponse.getWriter().write(body);
         httpServletResponse.getWriter().flush();
     }
-
-    //https://www.freecodecamp.org/portuguese/news/como-configurar-a-autenticacao-e-a-autorizacao-no-jwt-para-o-spring-boot-em-java/
 }

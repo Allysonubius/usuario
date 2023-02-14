@@ -14,12 +14,10 @@ import java.util.Optional;
 @Component
 @AllArgsConstructor
 public class UserDetalheServiceImpl implements UserDetailsService {
-
     private final UserRepository userRepository;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserEntity> userEntityOptional = this.userRepository.findByUsernameOpt(username);
+        Optional<UserEntity> userEntityOptional = this.userRepository.findByUsername(username);
         if(userEntityOptional.isPresent()){
             throw new UsernameNotFoundException("Usuário "+ username+ " não encontrado !");
         }
