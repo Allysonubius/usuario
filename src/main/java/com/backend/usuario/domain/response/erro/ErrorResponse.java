@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 
 @Data
 public class ErrorResponse {
-
     private static  String getErrorCodeAsString(HttpStatus httpStatus){
         return Integer.toString(httpStatus.value());
     }
