@@ -1,7 +1,9 @@
 package com.backend.usuario.config.swagger2;
 
+import io.swagger.models.auth.In;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -9,9 +11,9 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -21,10 +23,16 @@ public class SwaggerConfiguration {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .useDefaultResponseMessages(false)
+                .securitySchemes(Collections.singletonList(apiKey()))
+                .securityContexts(Collections.singletonList(securityContext()))
+                .tags(new Tag("Application", "Operations about users."))
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.backend.usuario.controller"))
                 .paths(PathSelectors.any())
                 .build();
+    }
+    private ApiKey apiKey(){
+        return new ApiKey("Token Access", HttpHeaders.AUTHORIZATION, In.HEADER.name());
     }
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
@@ -34,9 +42,6 @@ public class SwaggerConfiguration {
                 .license("MIT")
                 .contact(new Contact("allyson","www.site.com..br","allyson@email.com"))
                 .build();
-    }
-    private ApiKey apiKey(){
-        return new ApiKey("Authorization", "Authorization","header");
     }
     private SecurityContext securityContext(){
         return SecurityContext.builder()

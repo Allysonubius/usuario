@@ -2,6 +2,7 @@ package com.backend.usuario.config.auth;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.backend.usuario.domain.request.user.UserRequest;
+import com.backend.usuario.entity.UserEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,11 +25,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private AuthenticationManager authenticationManager ;
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager){
         this.authenticationManager = authenticationManager;
-        setFilterProcessesUrl(TOKEN_URL);
+        setFilterProcessesUrl(SIGN_USER_URL);
     }
     public Authentication authentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)throws AuthenticationException{
         try {
-            UserRequest userRequest = new ObjectMapper().readValue(httpServletRequest.getInputStream(), UserRequest.class);
+            UserEntity userRequest = new ObjectMapper().readValue(httpServletRequest.getInputStream(), UserEntity.class);
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             userRequest.getUsername(),

@@ -3,6 +3,7 @@ package com.backend.usuario.config.security;
 import com.backend.usuario.config.auth.JWTAuthenticationFilter;
 import com.backend.usuario.config.auth.JWTAuthorizationFilter;
 import com.backend.usuario.service.impl.UserDetalheServiceImpl;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,31 +21,29 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static com.backend.usuario.constants.SecurityConstants.*;
 
-@Configuration
 @EnableWebSecurity
+@NoArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetalheServiceImpl userDetalheServiceImpl;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    public WebSecurityConfig(UserDetalheServiceImpl userDetalheServiceImpl, BCryptPasswordEncoder bCryptPasswordEncoder){
-        this.userDetalheServiceImpl = userDetalheServiceImpl;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
     @Override
     protected void configure(HttpSecurity httpSecurity)throws Exception{
         // Disable CSRF (cross site request forgery)
         httpSecurity.csrf().disable();
         // Entry points
-        httpSecurity.authorizeRequests()
-                .antMatchers(HttpMethod.GET, CREATE_USER_URL).permitAll()
+        httpSecurity.authorizeRequests()//
+                .antMatchers(HttpMethod.GET, SIGN_USER_URL).permitAll()
+                .antMatchers(HttpMethod.POST,CREATE_USER_URL).permitAll()
+                // Disallow everything else..
                 .anyRequest().authenticated();
         // JWT Auth
         httpSecurity.addFilter(new JWTAuthorizationFilter(authenticationManager()));
         // JWT Filter
         httpSecurity.addFilter(new JWTAuthenticationFilter(authenticationManager()));
         // If a user try to access a resource without having enough permissions
-        httpSecurity.exceptionHandling().accessDeniedPage("/api/login");
+        //httpSecurity.exceptionHandling().accessDeniedPage("/api/login");
         // this disable session creation on Spring Security
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

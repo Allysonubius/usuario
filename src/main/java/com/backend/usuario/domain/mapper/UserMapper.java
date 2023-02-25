@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -20,6 +21,7 @@ public class UserMapper {
     @Autowired
     private final PasswordEncoder passwordEncoder;
     public UserEntity toUserRequest(UserRequest userRequest){
+        userRequest.setId(UUID.randomUUID());
         if(userRequest.getUsername().isEmpty() || userRequest.getUsername() != null){
             userRequest.setUsername(userRequest.getUsername());
         }
@@ -31,7 +33,7 @@ public class UserMapper {
         userRequest.setDateUpdate(null);
         return this.modelMapper.map(userRequest, UserEntity.class);
     }
-    public UserResponse toUserResponse(String userEntity){
+    public UserResponse toUserResponse(UserEntity userEntity){
         return this.modelMapper.map(userEntity, UserResponse.class);
     }
 }

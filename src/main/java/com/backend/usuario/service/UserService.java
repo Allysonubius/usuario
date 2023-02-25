@@ -12,24 +12,23 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
-@Slf4j(topic = "UserService")
+@Transactional
 public class UserService {
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private UserRepository userRepository;
-    @Transactional
-    public String saveUserEntity(UserEntity userEntity){
-        boolean existName = false;
+    public UserEntity saveUserEntity(UserEntity userEntity){
+        boolean existeNome = false;
         Optional<UserEntity> optional = this.userRepository.findByUsername(userEntity.getUsername());
         if(!optional.isPresent()){
-            log.info("Usuário salvo com sucesso !" + userEntity.getUsername());
-            existName = true;
+            LOGGER.info("Usuário salvo com sucesso !" + userEntity.getUsername());
+            existeNome = true;
         }else{
-            log.info("Usuário ja cadastrado" +  userEntity.getUsername());
+            LOGGER.info("Usuário ja cadastrado" +  userEntity.getUsername());
             throw new RuntimeException("Username já cadastrado :" + userEntity.getUsername());
         }
-        userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
-        return saveUserEntity(userEntity);
+        return this.userRepository.save(userEntity);
     }
 }

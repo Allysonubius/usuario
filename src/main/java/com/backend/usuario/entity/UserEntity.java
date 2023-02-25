@@ -1,9 +1,11 @@
 package com.backend.usuario.entity;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.UUID;
 import java.util.Date;
 
@@ -17,7 +19,7 @@ public class UserEntity {
     @Id
     @Type(type = "uuid-char")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_user", nullable = false, updatable = false, unique = true, columnDefinition = "BIGINT(32)")
+    @Column(name = "id_user", nullable = false, updatable = false, unique = true, columnDefinition = "VARCHAR(55)")
     protected UUID id;
     @Column(name = "username", nullable = false)
     private String username;
@@ -26,5 +28,5 @@ public class UserEntity {
     @Column(name="date_create", nullable = false)
     private Date dateCreate;
     @Column(name="date_update", nullable = false)
-    private Date dateUpdate;
+    private Timestamp dateUpdate;
 }
