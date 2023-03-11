@@ -31,6 +31,10 @@ public class UserService {
     private JwtUtils jwtUtils;
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    /*
+     * JavaDoc
+     */
     public UserEntity saveUserService(UserEntity userEntity){
         try{
             Optional<UserEntity> optional = this.userRepository.findByUsername(userEntity.getUsername());
@@ -39,14 +43,14 @@ public class UserService {
                 return this.userRepository.save(userEntity);
             }else{
                 log.info("saveUserService() - Usuário ja cadastrado - " +  userEntity.getUsername());
-                throw new RuntimeException("saveUserService() - Username já cadastrado : " + userEntity.getUsername());
+                throw new Exception("saveUserService() - Username já cadastrado : " + userEntity.getUsername());
             }
         }catch (Exception e){
             log.info("saveUserService() - Internal error when saving user " + e.getMessage());
-            throw new RuntimeException("saveUserService() - Internal error when saving user " + e.getMessage());
+            throw new RuntimeException("saveUserService() - Internal error when saving user ");
         }
     }
-    public ResponseEntity<?> loginUser(UserRequest user){
+    public ResponseEntity<Object> loginUser(UserRequest user){
        try {
            Authentication authentication = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
            // UserEntity userEntity = (UserEntity) authentication.getPrincipal();
