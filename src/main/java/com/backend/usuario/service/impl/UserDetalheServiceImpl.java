@@ -15,16 +15,16 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class UserDetalheServiceImpl implements UserDetailsService {
-    private static final Logger LOGGER = LogManager.getLogger(UserDetalheServiceImpl.class);
     private final UserRepository userRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UserEntity> userEntityOptional = this.userRepository.findByUsername(username);
-        if(userEntityOptional.isPresent()){
-            LOGGER.info("Usuário não encontrado");
+        if(!userEntityOptional.isPresent()){
+            log.info("logUsuário não encontrado");
             throw new UsernameNotFoundException("Usuário "+ username+ " não encontrado !");
         }
         return new DetalherUserData(userEntityOptional);

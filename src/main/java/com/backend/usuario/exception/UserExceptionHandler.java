@@ -11,19 +11,19 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.NoSuchElementException;
 
 public class UserExceptionHandler {
-    @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleException(Exception exception, WebRequest webRequest){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR));
-    }
-    @ExceptionHandler(NoSuchElementException.class)
-    public final ResponseEntity<Object> handleNoSuchElementException(Exception exception, WebRequest webRequest){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessage.WRONGDATA));
-    }
-    @ExceptionHandler(ResponseStatusException.class)
-    public final ResponseEntity<Object> handleResultException(ResponseStatusException responseStatusException, WebRequest webRequest){
-        return ResponseEntity.status(responseStatusException.getStatus())
-                .body(new ErrorResponse(String.valueOf(responseStatusException.getStatus()), responseStatusException.getReason()));
-    }
+//    @ExceptionHandler(Exception.class)
+//    public final ResponseEntity<Object> handleException(Exception exception, WebRequest webRequest){
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR));
+//    }
+//    @ExceptionHandler(NoSuchElementException.class)
+//    public final ResponseEntity<Object> handleNoSuchElementException(Exception exception, WebRequest webRequest){
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body(new ErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessage.WRONGDATA));
+//    }
+//    @ExceptionHandler(ResponseStatusException.class)
+//    public final ResponseEntity<Object> handleResultException(ResponseStatusException responseStatusException, WebRequest webRequest){
+//        return ResponseEntity.status(responseStatusException.getStatus())
+//                .body(new ErrorResponse(String.valueOf(responseStatusException.getStatus()), responseStatusException.getReason()));
+//    }
 }

@@ -1,4 +1,4 @@
-package com.backend.usuario.config.jwt;
+package com.backend.usuario.config.data.jwt;
 
 import com.backend.usuario.constants.SecurityConstants;
 import com.backend.usuario.entity.UserEntity;
@@ -14,9 +14,9 @@ public class JwtUtils {
     private SecurityConstants securityConstants;
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
     public String generateJwtToken(Authentication authentication) {
-        UserEntity userPrincipal = (UserEntity) authentication.getPrincipal();
+        Object userPrincipal = authentication.getPrincipal();
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject(userPrincipal.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + securityConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, securityConstants.SECRET)

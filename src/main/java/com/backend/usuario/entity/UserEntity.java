@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.UUID;
 import java.util.Date;
+import java.util.function.Function;
 
 @Data
 @Entity
@@ -29,4 +30,5 @@ public class UserEntity {
     private Date dateCreate;
     @Column(name="date_update", nullable = false)
     private Timestamp dateUpdate;
+
 }

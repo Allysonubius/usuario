@@ -13,8 +13,9 @@ public class UserApplication {
 	}
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder(){
-		return new BCryptPasswordEncoder(12);
+		return new BCryptPasswordEncoder();
 	}
+
 	@Bean
 	public ModelMapper modelMapper(){
 		return new ModelMapper();

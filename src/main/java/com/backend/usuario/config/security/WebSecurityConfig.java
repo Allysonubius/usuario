@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,7 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable();
         // Entry points
         httpSecurity.authorizeRequests()//
-                .antMatchers(HttpMethod.GET, SIGN_USER_URL).permitAll()
                 .antMatchers(HttpMethod.POST,CREATE_USER_URL).permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated();
@@ -51,11 +52,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity webSecurityConfig)throws Exception{
         // Allow swagger to be accessed without authentication
         webSecurityConfig.ignoring()
+                .antMatchers("/api/login-user")
                 .antMatchers("/swagger-ui/***")
                 .antMatchers("/v2/api-docs")
                 .antMatchers("/swagger-resources/**")
                 .antMatchers("/configuration/**")
                 .antMatchers("/webjars/**");
+    }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)throws Exception{

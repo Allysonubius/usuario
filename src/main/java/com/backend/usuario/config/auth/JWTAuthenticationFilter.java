@@ -19,6 +19,7 @@ import java.util.Date;
 
 import com.auth0.jwt.JWT;
 
+
 import static com.backend.usuario.constants.SecurityConstants.*;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
