@@ -4,6 +4,7 @@ import com.backend.usuario.config.data.jwt.JwtUtils;
 import com.backend.usuario.domain.request.user.UserRequest;
 import com.backend.usuario.domain.response.jwt.JwtResponse;
 import com.backend.usuario.entity.UserEntity;
+import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +40,15 @@ public class UserService {
             Optional<UserEntity> optional = this.userRepository.findByUsername(userEntity.getUsername());
             if(!optional.isPresent()){
                 log.info("saveUserService() - Usuário salvo com sucesso - " + userEntity.getUsername());
-                return this.userRepository.save(userEntity);
+
             }else{
                 log.info("saveUserService() - Usuário ja cadastrado - " +  userEntity.getUsername());
-                throw new Exception("saveUserService() - Username já cadastrado : " + userEntity.getUsername());
+                throw new UserServiceException("saveUserService() - Username já cadastrado : " + userEntity.getUsername());
             }
         }catch (Exception e){
             log.info("saveUserService() - Internal error when saving user " + e.getMessage());
-            throw new RuntimeException("saveUserService() - Internal error when saving user ");
         }
+        return this.userRepository.save(userEntity);
     }
     public ResponseEntity<Object> loginUser(UserRequest user){
        try {

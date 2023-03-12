@@ -82,7 +82,7 @@ public class UserController {
     })
     @PostMapping(value = "/login-user")
     @ApiOperation(value = "API REST - Login USER")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody UserRequest userRequest){
+    public ResponseEntity<Object> loginUser(@Valid @RequestBody UserRequest userRequest){
         return this.userService.loginUser(userRequest);
     }
 }
