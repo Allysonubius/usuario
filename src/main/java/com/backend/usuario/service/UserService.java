@@ -16,8 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import java.util.Optional;
+
+import static com.backend.usuario.constants.SecurityConstants.TOKEN_PREFIX;
 
 @Slf4j
 @Service
@@ -31,9 +32,8 @@ public class UserService {
     private JwtUtils jwtUtils;
     @Autowired
     private AuthenticationManager authenticationManager;
-
     /*
-     * JavaDoc
+     *
      */
     public UserEntity saveUserService(UserEntity userEntity){
         try{

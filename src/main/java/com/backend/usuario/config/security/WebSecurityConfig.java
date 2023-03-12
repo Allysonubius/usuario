@@ -6,7 +6,6 @@ import com.backend.usuario.service.impl.UserDetalheServiceImpl;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -36,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable();
         // Entry points
         httpSecurity.authorizeRequests()//
-                .antMatchers(HttpMethod.POST,CREATE_USER_URL).permitAll()
+                .antMatchers(HttpMethod.POST,SIGN_USER_URL).permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated();
         // JWT Auth
@@ -44,7 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // JWT Filter
         httpSecurity.addFilter(new JWTAuthenticationFilter(authenticationManager()));
         // If a user try to access a resource without having enough permissions
-        //httpSecurity.exceptionHandling().accessDeniedPage("/api/login");
         // this disable session creation on Spring Security
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
@@ -52,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity webSecurityConfig)throws Exception{
         // Allow swagger to be accessed without authentication
         webSecurityConfig.ignoring()
-                .antMatchers("/api/login-user")
+                // .antMatchers(SIGN_USER_URL)
                 .antMatchers("/swagger-ui/***")
                 .antMatchers("/v2/api-docs")
                 .antMatchers("/swagger-resources/**")
