@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
-import static com.backend.usuario.constants.SecurityConstants.TOKEN_PREFIX;
 
 @Slf4j
 @Service
@@ -52,14 +51,15 @@ public class UserService {
     }
     public ResponseEntity<Object> loginUser(UserRequest user){
        try {
+           log.info("loginUser() - Starting login");
            Authentication authentication = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
-           // UserEntity userEntity = (UserEntity) authentication.getPrincipal();
            SecurityContextHolder.getContext().setAuthentication(authentication);
            String jwt = jwtUtils.generateJwtToken(authentication);
 
+           log.info("loginUser() - Finished login");
            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(jwt));
        }catch (Exception e){
-           log.info("");
+           log.info("loginUser() - Error login user" + e.getMessage());
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
        }
     }

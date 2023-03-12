@@ -11,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -36,6 +35,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Entry points
         httpSecurity.authorizeRequests()//
                 .antMatchers(HttpMethod.POST,SIGN_USER_URL).permitAll()
+                .antMatchers("/swagger-ui/***").permitAll()
+                .antMatchers("/swagger-ui/***").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/configuration/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated();
         // JWT Auth
@@ -45,17 +50,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // If a user try to access a resource without having enough permissions
         // this disable session creation on Spring Security
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
-    @Override
-    public void configure(WebSecurity webSecurityConfig)throws Exception{
-        // Allow swagger to be accessed without authentication
-        webSecurityConfig.ignoring()
-                // .antMatchers(SIGN_USER_URL)
-                .antMatchers("/swagger-ui/***")
-                .antMatchers("/v2/api-docs")
-                .antMatchers("/swagger-resources/**")
-                .antMatchers("/configuration/**")
-                .antMatchers("/webjars/**");
     }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
