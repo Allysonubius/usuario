@@ -2,6 +2,7 @@ package com.backend.usuario.service;
 
 import com.backend.usuario.config.data.jwt.JwtUtils;
 import com.backend.usuario.domain.request.user.UserLoginRequest;
+import com.backend.usuario.domain.response.erro.ErrorResponse;
 import com.backend.usuario.domain.response.jwt.JwtResponse;
 import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.exception.UserServiceException;
@@ -18,9 +19,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -30,6 +33,7 @@ import java.util.*;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@ControllerAdvice
 public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -53,18 +57,18 @@ public class UserService {
                 log.info("saveUserService() - Email ja cadastrado - " + userEntity.getEmail());
                 throw new UserServiceException("saveUserService() - Email já cadastrado : " + userEntity.getEmail());
             }
-        } catch (Exception e){
+            return this.userRepository.save(userEntity);
+        } catch (UserServiceException e){
             log.info("saveUserService() - Internal error when saving user " + e.getMessage());
             throw new UserServiceException("saveUserService() - Internal error when saving user " + e.getMessage());
         }
-        return this.userRepository.save(userEntity);
     }
 
     /**
      * @param user
      * @return
      */
-    public ResponseEntity<JwtResponse> loginUser(@Valid UserLoginRequest user){
+    public ResponseEntity<Object> loginUser(@Valid UserLoginRequest user){
        try {
            log.info("loginUser() - Starting login user - user:[{}]", user);
            Authentication authentication = this.authenticationManager.authenticate(authenticationToken(user.getUsername(), user.getPassword()));
@@ -73,9 +77,9 @@ public class UserService {
 
            log.info("loginUser() - Finishing login user - user:[{}]", user);
            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(jwt));
-       }catch (Exception e){
+       }catch (UserServiceException e){
            log.info("loginUser() - Error login user - message:[{}]", e.getMessage());
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),e.getMessage(),e.getLocalizedMessage(), LocalDateTime.now()));
        }
     }
 
@@ -84,12 +88,12 @@ public class UserService {
             Optional<UserEntity> userId = this.userRepository.findById(id);
             if(!userId.isPresent()){
                 log.info("deleteUser() - ");
-                throw new RuntimeException("deleteUser() - ");
+                throw new UserServiceException("saveUserService() - Internal error when saving user " );
             }
             this.userRepository.deleteById(id);
-        }catch (Exception e){
+        }catch (UserServiceException e){
             log.info("");
-            throw new RuntimeException("");
+            throw new UserServiceException("saveUserService() - Internal error when saving user " + e.getMessage());
         }
     }
 

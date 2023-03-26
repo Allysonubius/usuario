@@ -6,6 +6,7 @@ import com.backend.usuario.domain.request.user.UserLoginRequest;
 import com.backend.usuario.domain.response.erro.ErrorResponse;
 import com.backend.usuario.domain.response.jwt.JwtResponse;
 import com.backend.usuario.domain.response.user.UserResponse;
+import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -31,6 +33,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Api(value = "API REST User")
 @CrossOrigin(value = "*")
+@ControllerAdvice
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
@@ -50,7 +53,7 @@ public class UserController {
             value = "API REST - Create USER",
             response = UserResponse.class
     )
-    public ResponseEntity<UserResponse> saveUserController(@Valid @RequestBody UserCreateUserRequest userCreateUserRequest){
+    public ResponseEntity<Object> saveUserController(@Valid @RequestBody UserCreateUserRequest userCreateUserRequest){
         try{
             log.info("saveUserController() -Init saveUser");
             Optional<UserResponse> optional = Stream.of(userCreateUserRequest)
@@ -60,13 +63,13 @@ public class UserController {
                     .findFirst();
             if (optional.isEmpty()){
                 log.info("saveUserController() - No data to save not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UserResponse());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),"No data to save not found !","/save-user", LocalDateTime.now()));
             }
             log.info("saveUserController() - Finished saveUser");
             return ResponseEntity.status(HttpStatus.CREATED).body(optional.get());
-        } catch (Exception e){
+        } catch (UserServiceException e){
             log.info("saveUserController() - Internal error when saving user " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),e.getMessage(),e.getLocalizedMessage(), LocalDateTime.now()));
         }
     }
 
@@ -82,7 +85,7 @@ public class UserController {
     })
     @PostMapping(value = "/login-user")
     @ApiOperation(value = "API REST - Login USER")
-    public ResponseEntity<JwtResponse> loginUser(@Valid @RequestBody UserLoginRequest userLoginRequest){
+    public ResponseEntity<Object> loginUser(@Valid @RequestBody UserLoginRequest userLoginRequest){
         return this.userService.loginUser(userLoginRequest);
     }
 
@@ -98,12 +101,12 @@ public class UserController {
     })
     @DeleteMapping(value = "/delete-user/{id}")
     @ApiOperation(value = "API REST - Delete USER")
-    public ResponseEntity<UserResponse> deleteUser(@PathVariable("id") UUID id){
+    public ResponseEntity<Object> deleteUser(@PathVariable("id") UUID id){
        try{
            this.userService.deleteUser(id);
            return ResponseEntity.status(HttpStatus.OK).body(new UserResponse());
-       }catch (Exception e) {
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+       }catch (UserServiceException e) {
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),e.getMessage(),e.getLocalizedMessage(), LocalDateTime.now()));
        }
     }
 
@@ -115,12 +118,12 @@ public class UserController {
     })
     @GetMapping(value = "/refresh")
     @ApiOperation(value = "API REST - Refresh token")
-    public ResponseEntity<JwtResponse> refreshUser(HttpServletRequest req){
+    public ResponseEntity<Object> refreshUser(HttpServletRequest req){
         try{
             String token =this.userService.refresh(req.getRemoteUser());
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(token));
-        }catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }catch (UserServiceException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),e.getMessage(),e.getLocalizedMessage(), LocalDateTime.now()));
         }
     }
 }
