@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  *
@@ -75,6 +76,20 @@ public class UserService {
            log.info("loginUser() - Error login user - message:[{}]", e.getMessage());
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
        }
+    }
+
+    public void deleteUser(UUID id){
+        try {
+            Optional<UserEntity> userId = this.userRepository.findById(id);
+            if(!userId.isPresent()){
+                log.info("deleteUser() - ");
+                throw new RuntimeException("deleteUser() - ");
+            }
+            this.userRepository.deleteById(id);
+        }catch (Exception e){
+            log.info("");
+            throw new RuntimeException("");
+        }
     }
 
     /**

@@ -6,7 +6,6 @@ import com.backend.usuario.domain.request.user.UserLoginRequest;
 import com.backend.usuario.domain.response.erro.ErrorResponse;
 import com.backend.usuario.domain.response.jwt.JwtResponse;
 import com.backend.usuario.domain.response.user.UserResponse;
-import com.backend.usuario.repository.UserRepository;
 import com.backend.usuario.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,19 +14,16 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-/**
- *
- */
 @Slf4j
 @RestController
 @RequestMapping(value = "/api")
@@ -35,11 +31,7 @@ import javax.validation.Valid;
 @Api(value = "API REST User")
 @CrossOrigin(value = "*")
 public class UserController {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
+    private final UserService userService;
     private final UserMapper userMapper;
 
     /**
@@ -91,5 +83,26 @@ public class UserController {
     @ApiOperation(value = "API REST - Login USER")
     public ResponseEntity<JwtResponse> loginUser(@Valid @RequestBody UserLoginRequest userLoginRequest){
         return this.userService.loginUser(userLoginRequest);
+    }
+
+    /**
+     * @param id
+     * @return
+     */
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Usuario deletado com sucesso !"),
+            @ApiResponse(code = 400, message = "Usuário não encontrado !"),
+            @ApiResponse(code = 403, message = "Você não tem permissão de inserir usuario !"),
+            @ApiResponse(code = 500, message = "O servidor encontrou uma condição inesperada que o impediu de atender à solicitação."),
+    })
+    @DeleteMapping(value = "/delete-user/{id}")
+    @ApiOperation(value = "API REST - Delete USER")
+    public ResponseEntity<UserResponse> deleteUser(@PathVariable("id") UUID id){
+       try{
+           this.userService.deleteUser(id);
+           return ResponseEntity.status(HttpStatus.OK).body(new UserResponse());
+       }catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+       }
     }
 }
