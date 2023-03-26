@@ -6,6 +6,8 @@ import com.backend.usuario.domain.response.jwt.JwtResponse;
 import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +22,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+
+import static com.backend.usuario.constants.SecurityConstants.TOKEN_PREFIX;
 
 /**
  *
@@ -36,6 +39,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+
     /*
      *
      */
@@ -91,6 +95,12 @@ public class UserService {
             throw new RuntimeException("");
         }
     }
+
+    public String refresh(String username) {
+        log.info("loginUser() - Starting login user - user:[{}]", username);
+        return jwtUtils.createToken(username,this.userRepository.findByUsername(username));
+    }
+
 
     /**
      * @param username

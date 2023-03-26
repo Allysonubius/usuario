@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Slf4j
@@ -104,5 +105,22 @@ public class UserController {
        }catch (Exception e) {
            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
        }
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Refresh token !"),
+            @ApiResponse(code = 400, message = "Erro ao retornar token !"),
+            @ApiResponse(code = 403, message = "Você não tem permissão a esta opção !"),
+            @ApiResponse(code = 500, message = "O servidor encontrou uma condição inesperada que o impediu de atender à solicitação."),
+    })
+    @GetMapping(value = "/refresh")
+    @ApiOperation(value = "API REST - Refresh token")
+    public ResponseEntity<JwtResponse> refreshUser(HttpServletRequest req){
+        try{
+            String token =this.userService.refresh(req.getRemoteUser());
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(token));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }
