@@ -3,7 +3,7 @@ package com.backend.usuario.exception;
 /**
  *
  */
-public class UserServiceException extends Exception{
+public class UserServiceException extends RuntimeException{
     /**
      * @param message
      */

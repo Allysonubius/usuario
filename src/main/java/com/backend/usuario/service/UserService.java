@@ -6,9 +6,8 @@ import com.backend.usuario.domain.response.jwt.JwtResponse;
 import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,15 +23,13 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.*;
 
-import static com.backend.usuario.constants.SecurityConstants.TOKEN_PREFIX;
-
 /**
  *
  */
 @Slf4j
 @Service
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;

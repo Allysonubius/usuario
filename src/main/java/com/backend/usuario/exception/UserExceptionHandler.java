@@ -1,32 +1,52 @@
 package com.backend.usuario.exception;
 
-import com.backend.usuario.constants.ErrorMessage;
 import com.backend.usuario.domain.response.erro.ErrorResponse;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
+import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.NoSuchElementException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  *
  */
-public class UserExceptionHandler {
-//    @ExceptionHandler(Exception.class)
-//    public final ResponseEntity<Object> handleException(Exception exception, WebRequest webRequest){
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR));
-//    }
-//    @ExceptionHandler(NoSuchElementException.class)
-//    public final ResponseEntity<Object> handleNoSuchElementException(Exception exception, WebRequest webRequest){
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                .body(new ErrorResponse(HttpStatus.BAD_REQUEST, ErrorMessage.WRONGDATA));
-//    }
-//    @ExceptionHandler(ResponseStatusException.class)
-//    public final ResponseEntity<Object> handleResultException(ResponseStatusException responseStatusException, WebRequest webRequest){
-//        return ResponseEntity.status(responseStatusException.getStatus())
-//                .body(new ErrorResponse(String.valueOf(responseStatusException.getStatus()), responseStatusException.getReason()));
-//    }
+@RestControllerAdvice
+public class UserExceptionHandler extends ResponseEntityExceptionHandler {
+    @Bean
+    public DefaultErrorAttributes errorAttributes() {
+        // Hide exception field in the return object
+        return new DefaultErrorAttributes() {
+            @Override
+            public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
+                return super.getErrorAttributes(webRequest, ErrorAttributeOptions.defaults().excluding(ErrorAttributeOptions.Include.EXCEPTION));
+            }
+        };
+    }
+
+    @ExceptionHandler(UserServiceException.class)
+    public void handleCustomException(HttpServletResponse res, ErrorResponse ex) throws IOException {
+        res.sendError(ex.getStatus(), ex.getErrorMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public void handleAccessDeniedException(HttpServletResponse res) throws IOException {
+        res.sendError(HttpStatus.FORBIDDEN.value(), "Access denied");
+    }
+
+    @ExceptionHandler(Exception.class)
+    public void handleException(HttpServletResponse res) throws IOException {
+        res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
+    }
+
 }

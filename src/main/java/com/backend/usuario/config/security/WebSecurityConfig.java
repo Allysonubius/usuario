@@ -54,6 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.addFilter(new JWTAuthorizationFilter(authenticationManager()));
         // JWT Filter
         httpSecurity.addFilter(new JWTAuthenticationFilter(authenticationManager()));
+
         // If a user try to access a resource without having enough permissions
         // this disable session creation on Spring Security
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
