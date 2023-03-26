@@ -21,6 +21,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static com.backend.usuario.constants.SecurityConstants.*;
 
+/**
+ *
+ */
 @EnableWebSecurity
 @NoArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -28,6 +31,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetalheServiceImpl userDetalheServiceImpl;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    /**
+     * @param httpSecurity
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity httpSecurity)throws Exception{
         // Disable CSRF (cross site request forgery)
@@ -35,7 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Entry points
         httpSecurity.authorizeRequests()//
                 .antMatchers(HttpMethod.POST,SIGN_USER_URL).permitAll()
-                .antMatchers("/swagger-ui/***").permitAll()
                 .antMatchers("/swagger-ui/***").permitAll()
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
@@ -51,14 +58,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // this disable session creation on Spring Security
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
+
+    /**
+     * @param authenticationConfiguration
+     * @return
+     * @throws Exception
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
+    /**
+     * @param authenticationManagerBuilder
+     * @throws Exception
+     */
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)throws Exception{
         authenticationManagerBuilder.userDetailsService(userDetalheServiceImpl).passwordEncoder(bCryptPasswordEncoder);
     }
+
+    /**
+     * @return
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource(){
         final UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();

@@ -1,12 +1,11 @@
 package com.backend.usuario.controller;
 
-import com.backend.usuario.config.data.jwt.JwtUtils;
 import com.backend.usuario.domain.mapper.UserMapper;
-import com.backend.usuario.domain.request.user.UserRequest;
+import com.backend.usuario.domain.request.user.UserCreateUserRequest;
+import com.backend.usuario.domain.request.user.UserLoginRequest;
 import com.backend.usuario.domain.response.erro.ErrorResponse;
 import com.backend.usuario.domain.response.jwt.JwtResponse;
 import com.backend.usuario.domain.response.user.UserResponse;
-import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.repository.UserRepository;
 import com.backend.usuario.service.UserService;
 import io.swagger.annotations.Api;
@@ -22,14 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ *
+ */
 @Slf4j
 @RestController
 @RequestMapping(value = "/api")
@@ -43,6 +41,11 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private final UserMapper userMapper;
+
+    /**
+     * @param userCreateUserRequest
+     * @return
+     */
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Usuario criado com sucesso !"),
             @ApiResponse(code = 403, message = "Você não tem permissão de inserir usuario !", response = ErrorResponse.class),
@@ -54,10 +57,10 @@ public class UserController {
             value = "API REST - Create USER",
             response = UserResponse.class
     )
-    public ResponseEntity<UserResponse> saveUserController(@Valid @RequestBody UserRequest userRequest){
+    public ResponseEntity<UserResponse> saveUserController(@Valid @RequestBody UserCreateUserRequest userCreateUserRequest){
         try{
             log.info("saveUserController() -Init saveUser");
-            Optional<UserResponse> optional = Stream.of(userRequest)
+            Optional<UserResponse> optional = Stream.of(userCreateUserRequest)
                     .map(this.userMapper::toUserRequest)
                     .map(this.userService::saveUserService)
                     .map( this.userMapper::toUserResponse)
@@ -68,12 +71,16 @@ public class UserController {
             }
             log.info("saveUserController() - Finished saveUser");
             return ResponseEntity.status(HttpStatus.CREATED).body(optional.get());
-        }catch (Exception e){
+        } catch (Exception e){
             log.info("saveUserController() - Internal error when saving user " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    /**
+     * @param userLoginRequest
+     * @return
+     */
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Usuario criado com sucesso !"),
             @ApiResponse(code = 403, message = "Você não tem permissão de inserir usuario !"),
@@ -82,7 +89,7 @@ public class UserController {
     })
     @PostMapping(value = "/login-user")
     @ApiOperation(value = "API REST - Login USER")
-    public ResponseEntity<Object> loginUser(@Valid @RequestBody UserRequest userRequest){
-        return this.userService.loginUser(userRequest);
+    public ResponseEntity<JwtResponse> loginUser(@Valid @RequestBody UserLoginRequest userLoginRequest){
+        return this.userService.loginUser(userLoginRequest);
     }
 }

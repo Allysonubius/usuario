@@ -6,13 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
+/**
+ *
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest {
+public class UserCreateUserRequest {
     @JsonIgnore
     private UUID id;
     @NotBlank(message = "Campo username não pode ser vazio")
@@ -23,4 +25,11 @@ public class UserRequest {
     private String dateCreate;
     @JsonIgnore
     private String dateUpdate;
+    @NotBlank(message = "Campo email não pode ser vazio")
+    private String email;
+
+    public UserCreateUserRequest(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+    }
 }

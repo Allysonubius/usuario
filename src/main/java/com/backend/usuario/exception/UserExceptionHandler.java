@@ -10,6 +10,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.NoSuchElementException;
 
+/**
+ *
+ */
 public class UserExceptionHandler {
 //    @ExceptionHandler(Exception.class)
 //    public final ResponseEntity<Object> handleException(Exception exception, WebRequest webRequest){

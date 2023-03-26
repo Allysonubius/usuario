@@ -10,6 +10,9 @@ import java.util.UUID;
 import java.util.Date;
 import java.util.function.Function;
 
+/**
+ *
+ */
 @Data
 @Entity
 @AllArgsConstructor
@@ -30,5 +33,6 @@ public class UserEntity {
     private Date dateCreate;
     @Column(name="date_update", nullable = false)
     private Timestamp dateUpdate;
-
+    @Column(name = "email", nullable = false)
+    private String email;
 }
