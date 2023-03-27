@@ -4,7 +4,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.backend.usuario.config.data.DetalherUserData;
 import com.backend.usuario.domain.request.user.UserCreateUserRequest;
 import com.backend.usuario.entity.UserEntity;
-import com.backend.usuario.exception.JwtAuthenticationFilterException;
+import com.backend.usuario.exception.UserServiceException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,9 +38,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      * @param httpServletResponse
      * @return
      * @throws AuthenticationException
-     * @throws JwtAuthenticationFilterException
+     * @throws UserServiceException
      */
-    public Authentication authentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, JwtAuthenticationFilterException {
+    public Authentication authentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, UserServiceException {
         log.info("authentication() - Starting authentication ");
         try {
             UserEntity userRequest = new ObjectMapper().readValue(httpServletRequest.getInputStream(), UserEntity.class);
@@ -52,7 +52,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                             new ArrayList<>())
             );
         }catch (IOException e){
-            throw new JwtAuthenticationFilterException(e.getMessage());
+            throw new UserServiceException(e.getMessage());
         }
     }
 

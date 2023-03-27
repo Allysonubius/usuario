@@ -1,8 +1,10 @@
 package com.backend.usuario.domain.mapper;
 
+import com.backend.usuario.domain.request.role.RoleUserRequest;
 import com.backend.usuario.domain.request.user.UserCreateUserRequest;
 import com.backend.usuario.domain.response.user.UserResponse;
 import com.backend.usuario.entity.UserEntity;
+import com.backend.usuario.entity.UserRoleEntity;
 import com.backend.usuario.service.UserService;
 import com.backend.usuario.util.EmailValidator;
 import lombok.AllArgsConstructor;
@@ -13,8 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
+
 
 @Slf4j
 @Component
@@ -27,6 +29,10 @@ public class UserMapper {
 
     @Autowired
     private final UserService userService;
+    public UserResponse toUserResponse(UserEntity userEntity){
+        return this.modelMapper.map(userEntity, UserResponse.class);
+    }
+
     public UserEntity toUserRequest(UserCreateUserRequest userCreateUserRequest){
         try {
             if(userCreateUserRequest.getUsername().isEmpty() || userCreateUserRequest.getPassword().isEmpty()){
@@ -47,14 +53,18 @@ public class UserMapper {
             }
             userCreateUserRequest.setEmail(userCreateUserRequest.getEmail());
 
-            return this.userService.saveUserService(this.modelMapper.map(userCreateUserRequest, UserEntity.class));
+            RoleUserRequest roleUserRequest = userService.getRoleById(userCreateUserRequest.getRole().getId());
+            if (roleUserRequest == null) {
+                throw new RuntimeException("toUserRequest() - Role com ID " + userCreateUserRequest.getRole() + " não encontrada.");
+            }
+            roleUserRequest.setId(userCreateUserRequest.getRole().getId());
+            userCreateUserRequest.setRole(roleUserRequest);
+
+            return this.modelMapper.map(userCreateUserRequest, UserEntity.class);
 
         } catch (Exception e){
             log.info("toUserRequest() - ");
             throw new RuntimeException("toUserRequest() - " + e.getMessage());
         }
-    }
-    public UserResponse toUserResponse(UserEntity userEntity){
-        return this.modelMapper.map(userEntity, UserResponse.class);
     }
 }

@@ -1,8 +1,10 @@
 package com.backend.usuario.domain.response.user;
 
+import com.backend.usuario.domain.response.role.RoleResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import java.util.Set;
 
 /**
  *
@@ -16,4 +18,5 @@ public class UserResponse {
     private String dateCreate;
     private String dateUpdate;
     private String email;
+    private Set<RoleResponse> role;
 }

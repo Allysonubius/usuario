@@ -1,12 +1,16 @@
 package com.backend.usuario.domain.request.user;
 
+import com.backend.usuario.domain.request.role.RoleUserRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.List;
 
 /**
  *
@@ -28,8 +32,6 @@ public class UserCreateUserRequest {
     @NotBlank(message = "Campo email não pode ser vazio")
     private String email;
 
-    public UserCreateUserRequest(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-    }
+    private RoleUserRequest role ;
+
 }

@@ -1,15 +1,16 @@
 package com.backend.usuario.service;
 
 import com.backend.usuario.config.data.jwt.JwtUtils;
+import com.backend.usuario.domain.request.role.RoleUserRequest;
 import com.backend.usuario.domain.request.user.UserLoginRequest;
 import com.backend.usuario.domain.response.erro.ErrorResponse;
 import com.backend.usuario.domain.response.jwt.JwtResponse;
 import com.backend.usuario.entity.UserEntity;
+import com.backend.usuario.entity.UserRoleEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import com.backend.usuario.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,13 +39,13 @@ public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
 
     /*
      *
      */
-    @SneakyThrows
     public UserEntity saveUserService(UserEntity userEntity){
         try{
             Optional<UserEntity> optionalUsername = this.userRepository.findByUsername(userEntity.getUsername());
@@ -57,6 +58,7 @@ public class UserService {
                 log.info("saveUserService() - Email ja cadastrado - " + userEntity.getEmail());
                 throw new UserServiceException("saveUserService() - Email já cadastrado : " + userEntity.getEmail());
             }
+
             return this.userRepository.save(userEntity);
         } catch (UserServiceException e){
             log.info("saveUserService() - Internal error when saving user " + e.getMessage());
@@ -100,6 +102,19 @@ public class UserService {
     public String refresh(String username) {
         log.info("loginUser() - Starting login user - user:[{}]", username);
         return jwtUtils.createToken(username,this.userRepository.findByUsername(username));
+    }
+
+    public RoleUserRequest getRoleById(Long id) {
+        Optional<UserRoleEntity> userRoleOpt = this.userRoleRepository.findById(id);
+        if (userRoleOpt.isPresent()) {
+            UserRoleEntity userRole = userRoleOpt.get();
+            RoleUserRequest roleUser = new RoleUserRequest();
+            roleUser.setId(userRole.getId());
+            return roleUser;
+        } else {
+            log.info("getRoleById() - role not found");
+            throw new UserServiceException("getRoleById() - role not found");
+        }
     }
 
 

@@ -1,7 +1,7 @@
 package com.backend.usuario.config.auth;
 
 import com.backend.usuario.config.data.jwt.JwtUtils;
-import com.backend.usuario.exception.JwtAuthorizationFilterException;
+import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.service.impl.UserDetalheServiceImpl;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             String username = claims.getSubject();
             if(username == null){
                 log.info("authenticationToken() - Username null " + null);
-                throw new JwtAuthorizationFilterException("authenticationToken() - Error username null " + null);
+                throw new UserServiceException("authenticationToken() - Error username null " + null);
             }
             Authentication authentication = new UsernamePasswordAuthenticationToken(username,null, new ArrayList<>());
             SecurityContextHolder.getContext().setAuthentication(authentication);

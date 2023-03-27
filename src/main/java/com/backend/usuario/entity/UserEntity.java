@@ -1,14 +1,12 @@
 package com.backend.usuario.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.UUID;
-import java.util.Date;
-import java.util.function.Function;
+import java.util.*;
 
 /**
  *
@@ -20,19 +18,28 @@ import java.util.function.Function;
 @Table(schema = "user_db",name = "user_tb")
 public class UserEntity {
     private static final long serialVersionUID = -6495853850202569574L;
+    @ApiModelProperty(value = "Código da pessoa")
     @Id
     @Type(type = "uuid-char")
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_user", nullable = false, updatable = false, unique = true, columnDefinition = "VARCHAR(55)")
     protected UUID id;
+    @ApiModelProperty(value = "Nome da pessoa")
     @Column(name = "username", nullable = false)
     private String username;
+    @ApiModelProperty(value = "Senha da pessoa")
     @Column(name = "password", nullable = false)
     private String password;
+    @ApiModelProperty(value = "Data de criação")
     @Column(name="date_create", nullable = false)
     private Date dateCreate;
+    @ApiModelProperty(value = "Data de atualização")
     @Column(name="date_update", nullable = false)
     private Timestamp dateUpdate;
+    @ApiModelProperty(value = "Email da pessoa")
     @Column(name = "email", nullable = false)
     private String email;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_role", referencedColumnName = "role_id")
+    private UserRoleEntity role;
 }
