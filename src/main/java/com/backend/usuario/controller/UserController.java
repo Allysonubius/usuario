@@ -110,6 +110,10 @@ public class UserController {
        }
     }
 
+    /**
+     * @param req
+     * @return
+     */
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Refresh token !"),
             @ApiResponse(code = 400, message = "Erro ao retornar token !"),

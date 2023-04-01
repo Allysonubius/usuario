@@ -2,6 +2,7 @@ package com.backend.usuario.service.impl;
 
 import com.backend.usuario.config.data.DetalherUserData;
 import com.backend.usuario.entity.UserEntity;
+import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class UserDetalheServiceImpl implements UserDetailsService {
         Optional<UserEntity> userEntityOptional = this.userRepository.findByUsername(username);
         if(!userEntityOptional.isPresent()){
             log.info("loadUserByUsername() - User not found - username:[{}]", username);
-            throw new UsernameNotFoundException("Usuário "+ username+ " não encontrado !");
+            throw new UserServiceException("Usuário "+ username+ " não encontrado !");
         }
         log.info("loadUserByUsername() - Finishing find user by username - username:[{}]", username);
         return new DetalherUserData(userEntityOptional);

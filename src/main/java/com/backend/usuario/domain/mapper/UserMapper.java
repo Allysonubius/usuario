@@ -26,13 +26,21 @@ public class UserMapper {
     private final ModelMapper modelMapper;
     @Autowired
     private final PasswordEncoder passwordEncoder;
-
     @Autowired
     private final UserService userService;
+
+    /**
+     * @param userEntity
+     * @return
+     */
     public UserResponse toUserResponse(UserEntity userEntity){
         return this.modelMapper.map(userEntity, UserResponse.class);
     }
 
+    /**
+     * @param userCreateUserRequest
+     * @return
+     */
     public UserEntity toUserRequest(UserCreateUserRequest userCreateUserRequest){
         try {
             if(userCreateUserRequest.getUsername().isEmpty() || userCreateUserRequest.getPassword().isEmpty()){

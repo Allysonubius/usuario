@@ -75,7 +75,7 @@ public class UserService {
            log.info("loginUser() - Starting login user - user:[{}]", user);
            Authentication authentication = this.authenticationManager.authenticate(authenticationToken(user.getUsername(), user.getPassword()));
            SecurityContextHolder.getContext().setAuthentication(authentication);
-           String jwt = jwtUtils.generateJwtToken(authentication);
+           String jwt = jwtUtils.generateJwtToken(authentication,user);
 
            log.info("loginUser() - Finishing login user - user:[{}]", user);
            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(jwt));
