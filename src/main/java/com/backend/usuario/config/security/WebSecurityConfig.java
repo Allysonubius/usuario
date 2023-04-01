@@ -39,7 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity)throws Exception{
         // Disable CSRF (cross site request forgery)
-        httpSecurity.csrf().disable();
+        httpSecurity.csrf()
+                .ignoringAntMatchers("/api/*");
         // Entry points
         httpSecurity.authorizeRequests()//
                 .antMatchers(HttpMethod.POST,SIGN_USER_URL).permitAll()
