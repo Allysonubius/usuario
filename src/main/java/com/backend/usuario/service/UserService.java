@@ -61,8 +61,8 @@ public class UserService {
 
             return this.userRepository.save(userEntity);
         } catch (UserServiceException e){
-            log.info("saveUserService() - Internal error when saving user " + e.getMessage());
-            throw new UserServiceException("saveUserService() - Internal error when saving user " + e.getMessage());
+            log.info("saveUserService() - Internal error when saving user - message:[{}]" + e.getMessage());
+            throw new UserServiceException("saveUserService() - Internal error " + e.getMessage());
         }
     }
 
@@ -124,7 +124,6 @@ public class UserService {
      * @return
      */
     private UsernamePasswordAuthenticationToken authenticationToken(String username, String password){
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username,password);
-        return token;
+        return new UsernamePasswordAuthenticationToken(username,password);
     }
 }

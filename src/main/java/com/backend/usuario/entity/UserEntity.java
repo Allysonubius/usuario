@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -16,7 +17,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(schema = "user_db",name = "user_tb")
-public class UserEntity {
+public class UserEntity implements Serializable {
     private static final long serialVersionUID = -6495853850202569574L;
     @ApiModelProperty(value = "Código da pessoa")
     @Id

@@ -5,6 +5,7 @@ import com.backend.usuario.domain.request.user.UserCreateUserRequest;
 import com.backend.usuario.domain.response.user.UserResponse;
 import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.entity.UserRoleEntity;
+import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.service.UserService;
 import com.backend.usuario.util.EmailValidator;
 import lombok.AllArgsConstructor;
@@ -44,8 +45,8 @@ public class UserMapper {
     public UserEntity toUserRequest(UserCreateUserRequest userCreateUserRequest){
         try {
             if(userCreateUserRequest.getUsername().isEmpty() || userCreateUserRequest.getPassword().isEmpty()){
-                log.info("toUserRequest() - ");
-                throw new RuntimeException("toUserRequest() - " + userCreateUserRequest.getPassword() + userCreateUserRequest.getUsername());
+                log.info("toUserRequest() - user:{}");
+                throw new UserServiceException("toUserRequest() - user:[]" + userCreateUserRequest.getPassword() + userCreateUserRequest.getUsername());
             }
             userCreateUserRequest.setId(UUID.randomUUID());
             userCreateUserRequest.setUsername(userCreateUserRequest.getUsername());
@@ -57,13 +58,13 @@ public class UserMapper {
             EmailValidator validator = new EmailValidator();
             if (!validator.validate(userCreateUserRequest.getEmail())) {
                 log.info("toUserRequest() - O email e inválido - email:[{}] ", userCreateUserRequest.getEmail());
-                throw new RuntimeException("toUserRequest() - O email e inválido - " + userCreateUserRequest.getEmail());
+                throw new UserServiceException("toUserRequest() - O email e inválido - " + userCreateUserRequest.getEmail());
             }
             userCreateUserRequest.setEmail(userCreateUserRequest.getEmail());
 
             RoleUserRequest roleUserRequest = userService.getRoleById(userCreateUserRequest.getRole().getId());
             if (roleUserRequest == null) {
-                throw new RuntimeException("toUserRequest() - Role com ID " + userCreateUserRequest.getRole() + " não encontrada.");
+                throw new UserServiceException("toUserRequest() - Role com ID " + userCreateUserRequest.getRole() + " não encontrada.");
             }
             roleUserRequest.setId(userCreateUserRequest.getRole().getId());
             userCreateUserRequest.setRole(roleUserRequest);
@@ -72,7 +73,7 @@ public class UserMapper {
 
         } catch (Exception e){
             log.info("toUserRequest() - ");
-            throw new RuntimeException("toUserRequest() - " + e.getMessage());
+            throw new UserServiceException("toUserRequest() - " + e.getMessage());
         }
     }
 }

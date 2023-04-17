@@ -42,6 +42,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
      * @throws IOException
      * @throws ServletException
      */
+    @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws IOException, ServletException{
         log.info("doFilterInternal() - Starting validation autorization user " + httpServletRequest.getAuthType());
         String header = httpServletRequest.getHeader(HEADER_STRING);
