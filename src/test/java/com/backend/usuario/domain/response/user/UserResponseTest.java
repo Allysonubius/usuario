@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = UserResponse.class)
 class UserResponseTest {
     @Test
-    public void testConstructorAndGetters() {
+    void testConstructorAndGetters() {
         String id = "123";
         String username = "johndoe";
         String dateCreate = "2022-03-14T12:00:00Z";
@@ -24,7 +24,7 @@ class UserResponseTest {
         assertEquals(dateUpdate, userResponse.getDateUpdate());
     }
     @Test
-    public void testSetterAndGetters() {
+    void testSetterAndGetters() {
         String id = "123";
         String username = "johndoe";
         String dateCreate = "2022-03-14T12:00:00Z";

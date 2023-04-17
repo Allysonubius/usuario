@@ -41,7 +41,7 @@ class UserServiceTest {
     // UserEntity userEntity = new UserEntity(UUID.randomUUID(),username,"1234567890",new Date(),null);
 
     @Test
-    public void testSaveUserService_UserNotExist() {
+    void testSaveUserService_UserNotExist() {
         // Creating a test user
 //        String username = "teste";
 //        UserEntity userEntity = new UserEntity(UUID.randomUUID(),username,"1234567890",new Date(),null);

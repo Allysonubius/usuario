@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class UserRequestTest {
 
     @Test
-    public void testConstructorAndGetters() {
+    void testConstructorAndGetters() {
 //        String username = "johndoe";
 //        String password = "password123";
 //        UserRequest userRequest = new UserRequest(username, password);
@@ -20,7 +20,7 @@ class UserRequestTest {
     }
 
     @Test
-    public void testValidation() {
+    void testValidation() {
 //        UserRequest userRequest = new UserRequest("", "");
 //        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 //        Validator validator = factory.getValidator();

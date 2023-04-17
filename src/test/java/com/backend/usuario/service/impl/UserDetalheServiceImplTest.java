@@ -24,7 +24,7 @@ class UserDetalheServiceImplTest {
     private UserEntity userEntity;
 
     @Test
-    public void testLoadUserByUsernameWithValidUsername() {
+    void testLoadUserByUsernameWithValidUsername() {
         String username = "johndoe";
         String password = "1234567890";
         UserEntity userEntity = new UserEntity();
@@ -38,7 +38,7 @@ class UserDetalheServiceImplTest {
     }
 
     @Test
-    public void testLoadUserByUsernameWithInvalidUsername() {
+    void testLoadUserByUsernameWithInvalidUsername() {
 //        String username = "johndoe";
 //        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 //        UserDetalheServiceImpl service = new UserDetalheServiceImpl(userRepository);

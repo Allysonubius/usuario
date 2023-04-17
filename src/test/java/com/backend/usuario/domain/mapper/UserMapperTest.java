@@ -35,36 +35,36 @@ class UserMapperTest {
 
     }
 
-//    @Test
-//    public void testToUserRequest() {
-////        // Arrange
-////        UserRequest request = new UserRequest(UUID.randomUUID(),"allyson","1234567890",String.valueOf(new Date()),null);
-////
-////        // Act
-////        modelMapper.map(request, UserEntity.class);
-////
-////        // Assert
-////        assertEquals(request.getUsername(), "allyson");
-////        assertFalse(bCryptPasswordEncoder.matches(request.getPassword(), request.getPassword()));
-//    }
+    @Test
+    void testToUserRequest() {
+//        // Arrange
+//        UserRequest request = new UserRequest(UUID.randomUUID(),"allyson","1234567890",String.valueOf(new Date()),null);
+//
+//        // Act
+//        modelMapper.map(request, UserEntity.class);
+//
+//        // Assert
+//        assertEquals(request.getUsername(), "allyson");
+//        assertFalse(bCryptPasswordEncoder.matches(request.getPassword(), request.getPassword()));
+    }
 
-//    @Test
-//    public void testToUserResponse() {
-////        // Arrange
-////        UserEntity userEntity = new UserEntity();
-////        userEntity.setId(UUID.randomUUID());
-////        userEntity.setUsername("allyson");
-////        userEntity.setDateCreate(new Date());
-////
-////        // Act
-////        UserResponse result = userMapper.toUserResponse(userEntity);
-////
-////        // Assert
-////        assertNotNull(result);
-////        assertEquals(userEntity.getId().toString(), result.getId());
-////        assertEquals(userEntity.getUsername(), result.getUsername());
-////        assertEquals(userEntity.getDateCreate(), result.getDateCreate());
-////        assertNull(result.getDateUpdate());
-//    }
+    @Test
+    void testToUserResponse() {
+//        // Arrange
+//        UserEntity userEntity = new UserEntity();
+//        userEntity.setId(UUID.randomUUID());
+//        userEntity.setUsername("allyson");
+//        userEntity.setDateCreate(new Date());
+//
+//        // Act
+//        UserResponse result = userMapper.toUserResponse(userEntity);
+//
+//        // Assert
+//        assertNotNull(result);
+//        assertEquals(userEntity.getId().toString(), result.getId());
+//        assertEquals(userEntity.getUsername(), result.getUsername());
+//        assertEquals(userEntity.getDateCreate(), result.getDateCreate());
+//        assertNull(result.getDateUpdate());
+    }
 
 }
