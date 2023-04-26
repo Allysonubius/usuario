@@ -3,7 +3,6 @@ package com.backend.usuario.domain.response.erro;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +17,4 @@ public class ErrorResponse {
     private final String message;
     private final String path;
     private LocalDateTime timestamp;
-
-
 }

@@ -32,7 +32,6 @@ import javax.validation.Valid;
 @RequestMapping(value = "/api")
 @RequiredArgsConstructor
 @Api(value = "API REST User")
-@CrossOrigin(value = "*")
 @ControllerAdvice
 public class UserController {
     private final UserService userService;

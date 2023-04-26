@@ -13,4 +13,7 @@ public class SecurityConstants {
 
     public static final String TOKEN_URL = "/api/token";
     public static final String SWAGGER_UI = "/swaggerr-ui.html";
+
+    private SecurityConstants() {
+    }
 }

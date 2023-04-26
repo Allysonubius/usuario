@@ -50,7 +50,7 @@ public class UserMapper {
             }
             userCreateUserRequest.setId(UUID.randomUUID());
             userCreateUserRequest.setUsername(userCreateUserRequest.getUsername());
-            userCreateUserRequest.setPassword(passwordEncoder.encode(userCreateUserRequest.getPassword()));
+            userCreateUserRequest.setPassword(passwordEnconde(userCreateUserRequest.getPassword()));
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
             userCreateUserRequest.setDateCreate(dateFormat.format(new Date()));
             userCreateUserRequest.setDateUpdate(null);
@@ -75,5 +75,9 @@ public class UserMapper {
             log.info("toUserRequest() - ");
             throw new UserServiceException("toUserRequest() - " + e.getMessage());
         }
+    }
+
+    private String passwordEnconde(String password){
+        return passwordEncoder.encode(password);
     }
 }
