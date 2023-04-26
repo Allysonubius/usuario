@@ -1,6 +1,11 @@
 # usuario
 Sistema de autenticação ao usuario
 
-Comandos
+Execute com profile
 
- - mvn sonar:sonar -Pcoverage
+- mvn sonar:sonar -Pcoverage
+
+
+Execute sem profile
+
+- mvn sonar:sonar
