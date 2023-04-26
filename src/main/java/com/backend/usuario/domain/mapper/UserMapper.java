@@ -4,10 +4,9 @@ import com.backend.usuario.domain.request.role.RoleUserRequest;
 import com.backend.usuario.domain.request.user.UserCreateUserRequest;
 import com.backend.usuario.domain.response.user.UserResponse;
 import com.backend.usuario.entity.UserEntity;
-import com.backend.usuario.entity.UserRoleEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.service.UserService;
-import com.backend.usuario.util.EmailValidator;
+import com.backend.usuario.util.EmailValidatorUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -55,7 +54,7 @@ public class UserMapper {
             userCreateUserRequest.setDateCreate(dateFormat.format(new Date()));
             userCreateUserRequest.setDateUpdate(null);
 
-            EmailValidator validator = new EmailValidator();
+            EmailValidatorUtil validator = new EmailValidatorUtil();
             if (!validator.validate(userCreateUserRequest.getEmail())) {
                 log.info("toUserRequest() - O email e inválido - email:[{}] ", userCreateUserRequest.getEmail());
                 throw new UserServiceException("toUserRequest() - O email e inválido - " + userCreateUserRequest.getEmail());

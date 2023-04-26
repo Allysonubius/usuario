@@ -62,13 +62,13 @@ public class UserController {
                     .findFirst();
             if (optional.isEmpty()){
                 log.info("saveUserController() - No data to save not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),"No data to save not found !","/save-user", LocalDateTime.now()));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),"No data to save not found !","/api/save-user", LocalDateTime.now()));
             }
             log.info("saveUserController() - Finished saveUser");
             return ResponseEntity.status(HttpStatus.CREATED).body(optional.get());
         } catch (UserServiceException e){
             log.info("saveUserController() - Internal error when saving user " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),e.getMessage(),e.getLocalizedMessage(), LocalDateTime.now()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage(),"/api/save-user", LocalDateTime.now()));
         }
     }
 
@@ -105,7 +105,7 @@ public class UserController {
            this.userService.deleteUser(id);
            return ResponseEntity.status(HttpStatus.OK).body(new UserResponse());
        }catch (UserServiceException e) {
-           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),e.getMessage(),e.getLocalizedMessage(), LocalDateTime.now()));
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),e.getMessage(),"/api/login-user", LocalDateTime.now()));
        }
     }
 
@@ -126,7 +126,7 @@ public class UserController {
             String token =this.userService.refresh(req.getRemoteUser());
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(token));
         }catch (UserServiceException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),e.getMessage(),e.getLocalizedMessage(), LocalDateTime.now()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),e.getMessage(),"/api/refresh", LocalDateTime.now()));
         }
     }
 }
