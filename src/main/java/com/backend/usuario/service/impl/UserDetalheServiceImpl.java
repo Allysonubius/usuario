@@ -13,15 +13,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-/**
- *
- */
 @Slf4j
 @Component
 @AllArgsConstructor
 public class UserDetalheServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
-
     /**
      * @param username
      * @return
@@ -29,13 +25,13 @@ public class UserDetalheServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("loadUserByUsername() - Starting find user by username - username:[{}]", username);
+        log.info("loadUserByUsername() - Starting find user by username - username:{}", username);
         Optional<UserEntity> userEntityOptional = this.userRepository.findByUsername(username);
         if(!userEntityOptional.isPresent()){
-            log.info("loadUserByUsername() - User not found - username:[{}]", username);
+            log.info("loadUserByUsername() - User not found - username:{}", username);
             throw new UserServiceException("Usuário "+ username+ " não encontrado !");
         }
-        log.info("loadUserByUsername() - Finishing find user by username - username:[{}]", username);
+        log.info("loadUserByUsername() - Finishing find user by username - username:{}", username);
         return new DetalherUserData(userEntityOptional);
     }
 }

@@ -19,11 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static com.backend.usuario.constants.SecurityConstants.*;
+import java.util.Arrays;
 
-/**
- *
- */
 @EnableWebSecurity
 @NoArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -31,24 +28,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetalheServiceImpl userDetalheServiceImpl;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
     /**
      * @param httpSecurity
      * @throws Exception
      */
     @Override
-    protected void configure(HttpSecurity httpSecurity)throws Exception{
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
         // Disable CSRF (cross site request forgery)
         httpSecurity.csrf().ignoringAntMatchers("/api/**");
+
+        // Enable CSRF protection for "/api/**" endpoint.
+        // httpSecurity.csrf().requireCsrfProtectionMatcher(new AntPathRequestMatcher("/api/**"))
+
         // Entry points
         httpSecurity.authorizeRequests()//
-                .antMatchers(HttpMethod.POST,SIGN_USER_URL).permitAll()
+                .antMatchers(HttpMethod.POST, "/api/login-user").permitAll()
                 .antMatchers("/swagger-ui/***").permitAll()
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/configuration/**").permitAll()
                 .antMatchers("/webjars/**").permitAll()
-                //.antMatchers("/api/save-user").permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated();
         // JWT Auth
@@ -60,7 +59,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // this disable session creation on Spring Security
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
-
     /**
      * @param authenticationConfiguration
      * @return
@@ -70,24 +68,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
     /**
      * @param authenticationManagerBuilder
      * @throws Exception
      */
     @Override
-    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)throws Exception{
+    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetalheServiceImpl).passwordEncoder(bCryptPasswordEncoder);
     }
-
     /**
      * @return
      */
     @Bean
-    CorsConfigurationSource corsConfigurationSource(){
+    CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**",corsConfiguration);
+        // Configuração para todas as rotas
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/api/***", corsConfiguration);
         return urlBasedCorsConfigurationSource;
     }
 }

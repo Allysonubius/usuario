@@ -12,35 +12,29 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.backend.usuario.constants.SecurityConstants.*;
 
-
-/**
- *
- */
 @Slf4j
 @Configuration
 @AllArgsConstructor
 public class JwtUtils {
-
     private final UserRepository userRepository;
-
     /**
      * @param authentication
      * @param user
      * @return
      */
     public String generateJwtToken(Authentication authentication, UserLoginRequest user) {
-        log.info("generateJwtToken() - Starting generating json web token - authentication:[{}]", authentication);
+        log.info("generateJwtToken() - Starting generating JWT - user:{} ", user.getUsername());
         Optional<UserEntity> optionalUser = this.userRepository.findByUsername(user.getUsername());
         if(!optionalUser.isPresent()){
-            log.info("generateJwtToken() - ");
-            throw new UserServiceException("");
+            log.info("generateJwtToken() - Failed to generate JWT token. User not found with username: {}", user.getUsername());
+            throw new UserServiceException("Failed to generate JWT token. User not found with username: {}" + user.getUsername());
         }
+
         Claims claims = Jwts.claims().setSubject(authentication.getName());
-        claims.put("auth", optionalUser.stream().map(s -> new SimpleGrantedAuthority(s.getRole().getRole())).filter(Objects::nonNull).collect(Collectors.toList()));
+        claims.put("auth", optionalUser.stream().map(s -> new SimpleGrantedAuthority(s.getRole().getRole())).filter(Objects::nonNull).toList());
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + EXPIRATION_TIME);
@@ -52,7 +46,7 @@ public class JwtUtils {
                 .setSubject(userPrincipal.toString())
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, SECRET);
-        log.info("generateJwtToken() - Finishing generating json web token - authentication:[{}]", authentication);
+        log.info("generateJwtToken() - Finishing generating json web token - authentication:{}", authentication.isAuthenticated());
 
         return jwt.compact();
     }
@@ -63,14 +57,14 @@ public class JwtUtils {
      * @return
      */
     public String createToken(String username, Optional<UserEntity> user) {
-        log.info("generateJwtToken() - Starting generating json web token - user:[{}]", user);
+        log.info("createToken() - Starting generation of JSON web token for user: {}", username);
         if(user.isPresent()){
-            log.info("");
-            throw new UserServiceException("");
+            log.error("createToken() - An error occurred while generating the JSON web token for username: {}", username);
+            throw new UserServiceException("An error occurred while generating the JSON web token for username: " + username);
         }
 
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put("auth", user.stream().map(s -> new SimpleGrantedAuthority(s.getRole().getRole())).filter(Objects::nonNull).collect(Collectors.toList()));
+        claims.put("auth", user.stream().map(s -> new SimpleGrantedAuthority(s.getRole().getRole())).filter(Objects::nonNull).toList());
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + EXPIRATION_TIME);
@@ -81,9 +75,8 @@ public class JwtUtils {
                 .setExpiration(validity)//
                 .signWith(SignatureAlgorithm.HS256, SECRET);
 
-        log.info("generateJwtToken() - Finishing generating json web token - user:[{}]", user);
+        log.info("createToken() - Finished generating JSON web token for username: {}", username);
 
-       return jwtBuilder.compact();
+        return jwtBuilder.compact();
     }
-
 }

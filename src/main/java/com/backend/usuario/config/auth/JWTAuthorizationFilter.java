@@ -44,7 +44,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws IOException, ServletException{
-        log.info("doFilterInternal() - Starting validation autorization user " + httpServletRequest.getAuthType());
+        log.info("doFilterInternal() - Starting validation autorization ");
         String header = httpServletRequest.getHeader(HEADER_STRING);
         try {
             if (header == null || !header.startsWith(TOKEN_PREFIX)){
@@ -60,9 +60,13 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             }
             Authentication authentication = new UsernamePasswordAuthenticationToken(username,null, new ArrayList<>());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info("doFilterInternal() - Finished validation autorization user " + httpServletRequest.getRequestURI());
+            if(httpServletRequest == null){
+                log.info("doFilterInternal() - Finished validation autorization user - " , "/api/login-user");
+            }else{
+                log.info("doFilterInternal() - Finished validation autorization user - " + httpServletRequest.getRequestURI());
+            }
         } catch (Exception e) {
-            log.info("doFilterInternal() - Error validation autorization user " + e.getMessage());
+            log.info("doFilterInternal() - Error validation autorization user - message:{}" + e.getMessage());
             SecurityContextHolder.clearContext();
             httpServletResponse.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }

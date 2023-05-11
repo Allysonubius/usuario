@@ -23,24 +23,19 @@ import com.auth0.jwt.JWT;
 
 import static com.backend.usuario.constants.SecurityConstants.*;
 
-/**
- *
- */
 @Slf4j
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager ;
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager){
         this.authenticationManager = authenticationManager;
     }
-
     /**
      * @param httpServletRequest
-     * @param httpServletResponse
      * @return
      * @throws AuthenticationException
      * @throws UserServiceException
      */
-    public Authentication authentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, UserServiceException {
+    public Authentication authentication(HttpServletRequest httpServletRequest) throws AuthenticationException, UserServiceException {
         log.info("authentication() - Starting authentication ");
         try {
             UserEntity userRequest = new ObjectMapper().readValue(httpServletRequest.getInputStream(), UserEntity.class);

@@ -1,8 +1,5 @@
 package com.backend.usuario.constants;
 
-/**
- *
- */
 public enum ErrorMessage {
     WRONGDATA("Input data is missing or is incorrect");
     private final String value;

@@ -103,9 +103,9 @@ public class UserController {
     public ResponseEntity<Object> deleteUser(@PathVariable("id") UUID id){
        try{
            this.userService.deleteUser(id);
-           return ResponseEntity.status(HttpStatus.OK).body(new UserResponse());
+           return ResponseEntity.status(HttpStatus.OK).build();
        }catch (UserServiceException e) {
-           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(),e.getMessage(),"/api/login-user", LocalDateTime.now()));
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage(),"/api/login-user", LocalDateTime.now()));
        }
     }
 
