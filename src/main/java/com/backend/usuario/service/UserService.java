@@ -13,7 +13,6 @@ import com.backend.usuario.repository.UserRoleRepository;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -55,9 +54,6 @@ public class UserService {
             UserEntity savedUser = this.userRepository.save(userEntity);
             log.info("saveUserService() - User saved successfully - user: {}", savedUser.toString());
             return savedUser;
-        } catch (DataIntegrityViolationException e) {
-            log.error("saveUserService() - Error when saving user - message: {}", e.getMessage());
-            throw new UserServiceException("Error when saving user: " + e.getMessage());
         } catch (UserServiceException e) {
             log.info("saveUserService() - Error when saving user - message: {}", e.getMessage());
             throw new UserServiceException("Error when saving user: " + e.getMessage());
