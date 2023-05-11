@@ -10,6 +10,6 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoleUserRequest {
-    @Size(min = 5, max = 5, message = "O campo email deve ter entre 5 e 5 caracteres")
+    @Size(min = 5, max = 5, message = "O campo role_id deve ser preenchido !")
     private Long id;
 }

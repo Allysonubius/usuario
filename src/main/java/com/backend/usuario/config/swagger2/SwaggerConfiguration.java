@@ -13,14 +13,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.*;
 import static com.backend.usuario.constants.SecurityConstants.HEADER_STRING;
 
-/**
- *
- */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfiguration {
-
-
     @Bean
     public Docket api(){
         return new Docket(DocumentationType.SWAGGER_2)
@@ -34,7 +29,6 @@ public class SwaggerConfiguration {
                 .paths(PathSelectors.any())
                 .build();
     }
-
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Usuario Auth")
@@ -47,8 +41,6 @@ public class SwaggerConfiguration {
     private SecurityContext securityContext(){
         return SecurityContext.builder().securityReferences(this.defaultAuth()).forPaths(PathSelectors.ant("/api/**")).build();
     }
-
-
     private List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("ADMIN", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];

@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-/**
- *
- */
 @AllArgsConstructor
 public class DetalherUserData implements UserDetails {
     private final Optional<UserEntity> userEntity;
