@@ -60,11 +60,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             }
             Authentication authentication = new UsernamePasswordAuthenticationToken(username,null, new ArrayList<>());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            if(httpServletRequest == null){
-                log.info("doFilterInternal() - Finished validation autorization user - " , "/api/login-user");
-            }else{
-                log.info("doFilterInternal() - Finished validation autorization user - " + httpServletRequest.getRequestURI());
-            }
+
+            log.info("doFilterInternal() - Finished validation autorization user - " + httpServletRequest.getRequestURI());
         } catch (Exception e) {
             log.info("doFilterInternal() - Error validation autorization user - message:{}" + e.getMessage());
             SecurityContextHolder.clearContext();

@@ -36,12 +36,4 @@ class UserDetalheServiceImplTest {
         assertEquals(userEntity.getUsername(), userDetails.getUsername());
         assertEquals(userEntity.getPassword(), userDetails.getPassword());
     }
-
-    @Test
-    void testLoadUserByUsernameWithInvalidUsername() {
-//        String username = "johndoe";
-//        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
-//        UserDetalheServiceImpl service = new UserDetalheServiceImpl(userRepository);
-//        assertThrows(UsernameNotFoundException.class, () -> service.loadUserByUsername(username));
-    }
 }

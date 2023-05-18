@@ -14,12 +14,10 @@ import org.mockito.InjectMocks;
 
 import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
@@ -58,7 +56,7 @@ class UserServiceTest {
         Assertions.assertThat(savedUser).isEqualTo(createUser());
     }
     @Test
-    public void saveUserShouldThrowDataIntegrityViolationExceptionWhenUsernameAlreadyExists() {
+    void saveUserShouldThrowDataIntegrityViolationExceptionWhenUsernameAlreadyExists() {
         when(userRepository.findByUsername(createUser().getUsername())).thenReturn(Optional.of(createUser()));
 
         assertThatThrownBy(() ->
@@ -67,7 +65,7 @@ class UserServiceTest {
                 .hasMessageContaining("Error when saving user: Username already registered - username: john.doe");
     }
     @Test
-    public void saveUserShouldThrowDataIntegrityViolationExceptionWhenEmailAlreadyExists() {
+    void saveUserShouldThrowDataIntegrityViolationExceptionWhenEmailAlreadyExists() {
         when(userRepository.findByUsername(createUser().getUsername())).thenReturn(Optional.empty());
         when(userRepository.findByEmail(createUser().getEmail())).thenReturn(Optional.of(createUser()));
 
@@ -77,7 +75,7 @@ class UserServiceTest {
                 .hasMessageContaining("Error when saving user: Email already registered - email: john.doe@example.com");
     }
     @Test
-    public void saveUserShouldThrowUserServiceExceptionWhenUserServiceExceptionIsThrown() {
+    void saveUserShouldThrowUserServiceExceptionWhenUserServiceExceptionIsThrown() {
         when(userRepository.findByUsername(createUser().getUsername())).thenThrow(new UserServiceException("Error"));
 
         assertThatThrownBy(() -> userService.saveUserService(createUser()))
@@ -85,7 +83,7 @@ class UserServiceTest {
                 .hasMessageContaining("Error");
     }
     @Test
-    public void saveUserShouldThrowUserServiceExceptionWhenUnknownExceptionIsThrown() {
+    void saveUserShouldThrowUserServiceExceptionWhenUnknownExceptionIsThrown() {
         when(userRepository.findByUsername(createUser().getUsername())).thenThrow(new RuntimeException("Error"));
 
         assertThatThrownBy(() -> userService.saveUserService(createUser()))
@@ -112,17 +110,8 @@ class UserServiceTest {
                 .isInstanceOf(UserServiceException.class)
                 .hasMessageContaining("User not found for ID: 95da51e8-d8bb-4370-8e9b-e33af89e780d");
     }
-    private UserEntity createUser() {
-        UserEntity user = new UserEntity();
-        user.setUsername("john.doe");
-        user.setEmail("john.doe@example.com");
-        user.setPassword("password");
-
-        return user;
-    }
-
     @Test
-    public void testRefresh_success() {
+    void testRefresh_success() {
         String username = "testuser";
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(username);
@@ -137,7 +126,7 @@ class UserServiceTest {
         verify(jwtUtils, times(1)).createToken(username, Optional.of(userEntity));
     }
     @Test
-    public void testRefresh_failure() {
+    void testRefresh_failure() {
         String username = "";
 
         assertThatThrownBy(() ->
@@ -147,5 +136,14 @@ class UserServiceTest {
 
         verify(userRepository, never()).findByUsername(anyString());
         verify(jwtUtils, never()).createToken(anyString(), any());
+    }
+
+    private UserEntity createUser() {
+        UserEntity user = new UserEntity();
+        user.setUsername("john.doe");
+        user.setEmail("john.doe@example.com");
+        user.setPassword("password");
+
+        return user;
     }
 }
