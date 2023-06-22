@@ -12,7 +12,6 @@ import com.backend.usuario.entity.UserRoleEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
 import com.backend.usuario.repository.UserRoleRepository;
-import io.jsonwebtoken.JwtException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
