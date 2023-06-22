@@ -10,7 +10,6 @@ import com.backend.usuario.entity.UserRoleEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
 import com.backend.usuario.repository.UserRoleRepository;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -70,14 +69,12 @@ public class UserService {
         try {
             log.info("loginUser() - Starting user login - username: {}", user.getUsername());
             Authentication authentication = this.authenticationManager.authenticate(authenticationToken(user.getUsername(), user.getPassword()));
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication, user);
 
             log.info("loginUser() - User login successful - username: {}", user.getUsername());
             return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(jwt));
-        }catch (JwtException e){
-            log.error("loginUser() - Error creating JWT token: {}", e.getMessage());
-            throw new UserServiceException("Error creating JWT token .");
         }catch (UserServiceException e) {
             log.info("loginUser() - Error during user login - message: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Error during user login.", e.getLocalizedMessage(), LocalDateTime.now()));

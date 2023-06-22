@@ -15,7 +15,7 @@ import java.util.*;
 @NoArgsConstructor
 @Table(schema = "user_db",name = "user_tb")
 public class UserEntity implements Serializable {
-    private static final long serialVersionUID = -6495853850202569574L;
+    private static final long serialVersionUID = 2405172041950251807L;
     @ApiModelProperty(value = "Código da pessoa")
     @Id
     @Type(type = "uuid-char")
