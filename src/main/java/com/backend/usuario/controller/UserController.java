@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 @Slf4j
 @RestController
 @RequestMapping(value = "/api")
@@ -43,7 +42,7 @@ public class UserController {
      */
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Usuario criado com sucesso !"),
-            @ApiResponse(code = 403, message = "Você não tem permissão de inserir usuario !", response = ErrorResponse.class),
+            @ApiResponse(code = 403, message = "Você não tem permissão !", response = ErrorResponse.class),
             @ApiResponse(code = 404, message = "Nome ja cadastradado !", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "O servidor encontrou uma condição inesperada que o impediu de atender à solicitação.", response = ErrorResponse.class),
     })
@@ -77,9 +76,9 @@ public class UserController {
      * @return
      */
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Usuario criado com sucesso !"),
-            @ApiResponse(code = 403, message = "Você não tem permissão de inserir usuario !"),
-            @ApiResponse(code = 404, message = "Nome ja cadastradado !"),
+            @ApiResponse(code = 201, message = "Usuario logado com sucesso !"),
+            @ApiResponse(code = 403, message = "Você não tem permissão !"),
+            @ApiResponse(code = 404, message = "Erro ao realizar login !"),
             @ApiResponse(code = 500, message = "O servidor encontrou uma condição inesperada que o impediu de atender à solicitação."),
     })
     @PostMapping(value = "/login-user")
@@ -95,7 +94,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Usuario deletado com sucesso !"),
             @ApiResponse(code = 400, message = "Usuário não encontrado !"),
-            @ApiResponse(code = 403, message = "Você não tem permissão de inserir usuario !"),
+            @ApiResponse(code = 403, message = "Você não tem permissão !"),
             @ApiResponse(code = 500, message = "O servidor encontrou uma condição inesperada que o impediu de atender à solicitação."),
     })
     @DeleteMapping(value = "/delete-user/{id}")

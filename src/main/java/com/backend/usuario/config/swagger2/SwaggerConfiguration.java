@@ -4,6 +4,7 @@ import io.swagger.models.auth.In;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.builders.*;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.service.contexts.SecurityContext;
@@ -14,7 +15,6 @@ import java.util.*;
 import static com.backend.usuario.constants.SecurityConstants.HEADER_STRING;
 
 @Configuration
-@EnableSwagger2
 public class SwaggerConfiguration {
     @Bean
     public Docket api(){
@@ -29,6 +29,7 @@ public class SwaggerConfiguration {
                 .paths(PathSelectors.any())
                 .build();
     }
+
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Usuario Auth")

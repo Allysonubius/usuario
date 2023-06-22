@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -34,15 +33,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        // Disable CSRF (cross site request forgery)
-        httpSecurity.csrf().ignoringAntMatchers("/api/**");
 
+        httpSecurity.csrf().ignoringAntMatchers("/api/**");
         // Enable CSRF protection for "/api/**" endpoint.
         // httpSecurity.csrf().requireCsrfProtectionMatcher(new AntPathRequestMatcher("/api/**"))
 
-        // Entry points
         httpSecurity.authorizeRequests()//
                 .antMatchers(HttpMethod.POST, "/api/login-user").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/save-user").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/api/delete-user/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/**").permitAll()
                 .antMatchers("/swagger-ui/***").permitAll()
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
@@ -50,14 +50,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated();
+
+        httpSecurity.headers().cacheControl();
         // JWT Auth
         httpSecurity.addFilter(new JWTAuthorizationFilter(authenticationManager()));
         // JWT Filter
         httpSecurity.addFilter(new JWTAuthenticationFilter(authenticationManager()));
 
-        // If a user try to access a resource without having enough permissions
-        // this disable session creation on Spring Security
-        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
     /**
      * @param authenticationConfiguration
@@ -76,6 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetalheServiceImpl).passwordEncoder(bCryptPasswordEncoder);
     }
+
     /**
      * @return
      */
@@ -84,10 +84,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         final UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         // Configuração para todas as rotas
         CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT"));
-        corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        urlBasedCorsConfigurationSource.registerCorsConfiguration("/api/***", corsConfiguration);
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/api/**", corsConfiguration);
         return urlBasedCorsConfigurationSource;
     }
 }
