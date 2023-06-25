@@ -22,6 +22,7 @@ import java.util.Date;
 import com.auth0.jwt.JWT;
 
 import static com.backend.usuario.constants.SecurityConstants.*;
+import static com.backend.usuario.util.PasswordGeneratorUtil.generateNewSecretKey;
 
 @Slf4j
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -62,7 +63,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain, Authentication authentication)throws IOException{
         logger.info("successfulAuthentication() - Starting authentication ");
         DetalherUserData data = (DetalherUserData) authentication.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC512(SECRET);
+        String newSecret = generateNewSecretKey();
+        Algorithm algorithm = Algorithm.HMAC512(newSecret);
         String token = JWT.create()
                 .withSubject(data.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
