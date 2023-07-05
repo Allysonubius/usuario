@@ -5,6 +5,8 @@ import com.backend.usuario.domain.request.role.RoleUserRequest;
 import com.backend.usuario.domain.request.user.UserLoginRequest;
 import com.backend.usuario.domain.response.erro.ErrorResponse;
 import com.backend.usuario.domain.response.jwt.JwtResponse;
+import com.backend.usuario.domain.response.role.RoleResponse;
+import com.backend.usuario.domain.response.user.UserResponse;
 import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.entity.UserRoleEntity;
 import com.backend.usuario.exception.UserServiceException;
@@ -12,6 +14,9 @@ import com.backend.usuario.repository.UserRepository;
 import com.backend.usuario.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,8 +29,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -37,6 +41,7 @@ public class UserService {
     private final UserRoleRepository userRoleRepository;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+
     /**
      * @param userEntity
      * @return
@@ -61,6 +66,60 @@ public class UserService {
             throw new UserServiceException("Unknown error when saving user: " + e.getMessage());
         }
     }
+
+    /**
+     * @return
+     */
+    public Page<UserResponse> listUsers(Pageable pageable){
+        log.info("listUsers() - Starting user list");
+
+        Page<UserEntity> entityPage = listUsersRepository(pageable);
+
+        List<UserEntity> userEntities = entityPage.getContent();
+        List<UserResponse> responseList = new ArrayList<>();
+
+        for(UserEntity user : userEntities){
+            UserResponse response = new UserResponse();
+            response.setId(user.getId().toString());
+            response.setUsername(user.getUsername());
+            response.setDateCreate(user.getDateCreate().toString());
+            response.setDateUpdate(user.getDateUpdate().toString());
+            response.setEmail(user.getEmail());
+
+            // Mapear list de roles
+            Set<RoleResponse> roleResponses = new HashSet<>();
+            if(user.getRole() != null){
+                RoleResponse roleResponse = new RoleResponse();
+                roleResponse.setId(user.getRole().getId().toString());
+                roleResponse.setRole(user.getRole().getRole());
+                roleResponses.add(roleResponse);
+            }else{
+                log.info("listUsers() - No Role found for user: {}", user.getRole());
+                throw new UserServiceException("No role found for user : " + user.getRole());
+            }
+            response.setRole(roleResponses);
+
+            responseList.add(response);
+        }
+
+        log.info("listUsers() - Completed user list users:{}");
+        return new PageImpl<>(responseList, pageable,entityPage.getTotalElements());
+    }
+
+    /**
+     * @return
+     */
+    private Page<UserEntity> listUsersRepository(Pageable pageable){
+        log.info("listUsersRepository() - Querying user repository");
+        Page<UserEntity> list = this.userRepository.findAll(pageable);
+        if(list.isEmpty()){
+            log.error("listUsersRepository() - No users found users:{}" , list.stream().toList());
+            throw new UserServiceException("listUsersRepository() - No users found users:{}" + list.stream().toList());
+        }
+        log.info("listUsersRepository() - Completed user query user:{}", list.stream().toList());
+        return list;
+    }
+
     /**
      * @param user
      * @return
@@ -80,6 +139,7 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Error during user login.", e.getLocalizedMessage(), LocalDateTime.now()));
         }
     }
+
     /**
      * @param id
      */
@@ -93,6 +153,7 @@ public class UserService {
             throw new UserServiceException("Failed to delete user ID: " + id);
         }
     }
+
     /**
      * @param username
      * @return
@@ -105,6 +166,7 @@ public class UserService {
         }
         return jwtUtils.createToken(username,this.userRepository.findByUsername(username));
     }
+
     /**
      * @param id
      * @return
@@ -117,6 +179,7 @@ public class UserService {
         log.info("getRoleById() - Role found - id:{}", id);
         return roleUser;
     }
+
     /**
      * @param id
      */
@@ -131,6 +194,7 @@ public class UserService {
             throw new UserServiceException("User not found for ID: " + id);
         }
     }
+
     /**
      * @param optionalUsername
      * @param userEntity
@@ -142,6 +206,7 @@ public class UserService {
         }
     }
 
+
     /**
      * @param optionalEmail
      * @param userEntity
@@ -152,6 +217,7 @@ public class UserService {
             throw new UserServiceException("Email already registered - email: " + userEntity.getEmail());
         }
     }
+
     /**
      * @param username
      * @param password
@@ -160,6 +226,7 @@ public class UserService {
     private UsernamePasswordAuthenticationToken authenticationToken(String username, String password){
         return new UsernamePasswordAuthenticationToken(username,password);
     }
+
     /**
      * @param id
      * @return

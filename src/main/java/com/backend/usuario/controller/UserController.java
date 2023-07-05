@@ -17,9 +17,12 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.List;
 import java.util.stream.Stream;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -106,6 +109,23 @@ public class UserController {
        }catch (UserServiceException e) {
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage(),"/api/login-user", LocalDateTime.now()));
        }
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Listagem completa !"),
+            @ApiResponse(code = 404, message = "Lista vazia !"),
+            @ApiResponse(code = 403, message = "Você não tem permissão !"),
+            @ApiResponse(code = 500, message = "O servidor encontrou uma condição inesperada que o impediu de atender à solicitação."),
+    })
+    @GetMapping(value = "/list-user")
+    @ApiOperation(value = "API REST - List Users")
+    public ResponseEntity<Page<UserResponse>> listUsers(Pageable pageable){
+        try{
+            Page<UserResponse> listUsers =this.userService.listUsers(pageable);
+            return ResponseEntity.status(HttpStatus.OK).body(listUsers);
+        }catch (UserServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     /**

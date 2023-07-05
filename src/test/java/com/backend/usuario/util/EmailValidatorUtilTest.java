@@ -4,21 +4,28 @@ import com.backend.usuario.exception.UserServiceException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @SpringBootTest(classes = EmailValidatorUtil.class)
 class EmailValidatorUtilTest {
 
     @Test
-    public void testConstructorWithMessage() {
-        String errorMessage = "Error occurred in the user service.";
-        UserServiceException exception = new UserServiceException(errorMessage);
-        assertEquals(errorMessage, exception.getMessage());
+    public void testValidate_ValidEmail() {
+        EmailValidatorUtil util = new EmailValidatorUtil();
+        String validEmail = "test@example.com";
+
+        boolean isValid = util.validate(validEmail);
+
+        assertTrue(isValid);
     }
 
     @Test
     public void testConstructorWithNullMessage() {
-        UserServiceException exception = new UserServiceException(null);
-        assertEquals(null, exception.getMessage());
+        EmailValidatorUtil util = new EmailValidatorUtil();
+        String validEmail = "test.email";
+
+        boolean isValid = util.validate(validEmail);
+
+        assertFalse(isValid);
     }
 }

@@ -33,7 +33,7 @@ public class UserEntity implements Serializable {
     private Date dateCreate;
     @ApiModelProperty(value = "Data de atualização")
     @Column(name="date_update", nullable = false)
-    private Timestamp dateUpdate;
+    private Date dateUpdate;
     @ApiModelProperty(value = "Email da pessoa")
     @Column(name = "email", nullable = false)
     private String email;

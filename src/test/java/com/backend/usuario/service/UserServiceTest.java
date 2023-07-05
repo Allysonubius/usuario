@@ -7,6 +7,7 @@ import com.backend.usuario.domain.request.user.UserCreateUserRequest;
 import com.backend.usuario.domain.request.user.UserLoginRequest;
 import com.backend.usuario.domain.response.erro.ErrorResponse;
 import com.backend.usuario.domain.response.jwt.JwtResponse;
+import com.backend.usuario.domain.response.user.UserResponse;
 import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.entity.UserRoleEntity;
 import com.backend.usuario.exception.UserServiceException;
@@ -17,12 +18,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -109,6 +112,70 @@ class UserServiceTest {
 
         verify(authenticationManager, times(1)).authenticate(Mockito.any(UsernamePasswordAuthenticationToken.class));
         verify(jwtUtils, times(1)).generateJwtToken(Mockito.any(Authentication.class), Mockito.any(UserLoginRequest.class));
+    }
+
+    @Test
+    void testListUsers_Success() {
+        List<UserEntity> userEntities = new ArrayList<>();
+        UserEntity user1 = new UserEntity();
+        user1.setId(UUID.fromString("bb39dcdd-fd0e-4135-9c2f-f30d4ce407d3"));
+        user1.setUsername("john_doe");
+        user1.setDateCreate(new Date());
+        user1.setDateUpdate(new Date());
+        user1.setEmail("john.doe@example.com");
+        Long id = 1L;
+        UserRoleEntity userRoleEntity = new UserRoleEntity();
+        userRoleEntity.setId(id);
+        user1.setRole(userRoleEntity);
+        // Adicionar outras propriedades ao usuário 1
+
+        userEntities.add(user1);
+
+        // Configurar o comportamento simulado do repositório de usuários
+        Page<UserEntity> page = new PageImpl<>(userEntities);
+        when(userRepository.findAll(any(Pageable.class))).thenReturn(page);
+
+        // Chamar o método que está sendo testado
+        Page<UserResponse> result = userService.listUsers(Pageable.unpaged());
+
+        // Verificar o resultado
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+
+        List<UserResponse> userList = result.getContent();
+        assertEquals(1, userList.size());
+
+        UserResponse userResponse1 = userList.get(0);
+        assertEquals("bb39dcdd-fd0e-4135-9c2f-f30d4ce407d3", userResponse1.getId());
+        assertEquals("john_doe", userResponse1.getUsername());
+        assertEquals("john.doe@example.com", userResponse1.getEmail());
+    }
+
+    @Test
+    void testListUsers_NoUsersFound() {
+        Page<UserEntity> emptyPage = new PageImpl<>(Collections.emptyList());
+        when(userRepository.findAll(any(Pageable.class))).thenReturn(emptyPage);
+
+
+        assertThrows(UserServiceException.class, () -> userService.listUsers(Pageable.unpaged()));
+    }
+
+    @Test
+    void testListUsers_NoRoleFound() {
+        List<UserEntity> userEntities = new ArrayList<>();
+        UserEntity user1 = new UserEntity();
+        user1.setId(UUID.randomUUID());
+        user1.setUsername("john_doe");
+        user1.setDateCreate(new Date());
+        user1.setDateUpdate(new Date());
+        user1.setEmail("john.doe@example.com");
+
+        userEntities.add(user1);
+
+        Page<UserEntity> page = new PageImpl<>(userEntities);
+        when(userRepository.findAll(any(Pageable.class))).thenReturn(page);
+
+        assertThrows(UserServiceException.class, () -> userService.listUsers(Pageable.unpaged()));
     }
 
     @Test
