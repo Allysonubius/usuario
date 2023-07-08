@@ -39,38 +39,34 @@ public class UserMapper {
      * @return
      */
     public UserEntity toUserRequest(UserCreateUserRequest userCreateUserRequest){
-        try {
-            if(userCreateUserRequest.getUsername().isEmpty() || userCreateUserRequest.getPassword().isEmpty()){
-                log.info("toUserRequest() - Empty username or password in user: {}", userCreateUserRequest);
-                throw new UserServiceException("Empty username or password in user: " + userCreateUserRequest.getUsername());
-            }
-            userCreateUserRequest.setId(UUID.randomUUID());
-            userCreateUserRequest.setUsername(userCreateUserRequest.getUsername());
-            userCreateUserRequest.setPassword(passwordEnconde(userCreateUserRequest.getPassword()));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-            userCreateUserRequest.setDateCreate(dateFormat.format(new Date()));
-            userCreateUserRequest.setDateUpdate(null);
-
-            EmailValidatorUtil validator = new EmailValidatorUtil();
-            if (!validator.validate(userCreateUserRequest.getEmail())) {
-                log.info("toUserRequest() - Inválido email:{} ", userCreateUserRequest.getEmail());
-                throw new UserServiceException("Inválido email: " + userCreateUserRequest.getEmail());
-            }
-            userCreateUserRequest.setEmail(userCreateUserRequest.getEmail());
-
-            RoleUserRequest roleUserRequest = userService.getRoleById(userCreateUserRequest.getRole().getId());
-            if (roleUserRequest == null) {
-                throw new UserServiceException("Role com ID: " + userCreateUserRequest.getRole().getId() + " não encontrado.");
-            }
-            roleUserRequest.setId(userCreateUserRequest.getRole().getId());
-            userCreateUserRequest.setRole(roleUserRequest);
-
-            return this.modelMapper.map(userCreateUserRequest, UserEntity.class);
-
-        } catch (Exception e){
-            log.error("toUserRequest() - Error creating user: {} , Reason:{}", userCreateUserRequest.getUsername() , e.getMessage());
-            throw new UserServiceException("Error creating user: {}");
+        if(userCreateUserRequest.getUsername().isEmpty() || userCreateUserRequest.getPassword().isEmpty()){
+            log.info("toUserRequest() - Empty username or password in user: {}", userCreateUserRequest);
+            throw new UserServiceException("Empty username or password in user: " + userCreateUserRequest.getUsername());
         }
+        userCreateUserRequest.setId(UUID.randomUUID());
+        userCreateUserRequest.setUsername(userCreateUserRequest.getUsername());
+        userCreateUserRequest.setPassword(passwordEnconde(userCreateUserRequest.getPassword()));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT-3")); // Definido GMT-3 como horário de Brasília
+        userCreateUserRequest.setDateCreate(dateFormat.format(new Date()));
+        userCreateUserRequest.setDateUpdate(null);
+
+        EmailValidatorUtil validator = new EmailValidatorUtil();
+        if (!validator.validate(userCreateUserRequest.getEmail())) {
+            log.info("toUserRequest() - Inválido email:{} ", userCreateUserRequest.getEmail());
+            throw new UserServiceException("Inválido email: " + userCreateUserRequest.getEmail());
+        }
+        userCreateUserRequest.setEmail(userCreateUserRequest.getEmail());
+
+        RoleUserRequest roleUserRequest = userService.getRoleById(userCreateUserRequest.getRole().getId());
+        if (roleUserRequest == null) {
+            throw new UserServiceException("Role com ID: " + userCreateUserRequest.getRole().getId() + " não encontrado.");
+        }
+        roleUserRequest.setId(userCreateUserRequest.getRole().getId());
+        userCreateUserRequest.setRole(roleUserRequest);
+
+        return this.modelMapper.map(userCreateUserRequest, UserEntity.class);
     }
     /**
      * @param password
