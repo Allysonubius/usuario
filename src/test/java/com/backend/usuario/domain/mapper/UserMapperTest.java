@@ -88,9 +88,6 @@ class UserMapperTest {
         assertEquals(request.getEmail(),"teste@gmail.com");
 
         assertNotNull("bb39dcdd-fd0e-4135-9c2f-f30d4ce407d3");
-
-        assertNotNull(true);
-        assertNotNull(true);
     }
 
     @Test
