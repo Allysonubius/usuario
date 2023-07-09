@@ -32,7 +32,7 @@ public class LoginController {
      * @return
      */
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Usuario logado com sucesso !"),
+            @ApiResponse(code = 200, message = "Usuario logado com sucesso !"),
             @ApiResponse(code = 403, message = "Você não tem permissão !"),
             @ApiResponse(code = 404, message = "Erro ao realizar login !"),
             @ApiResponse(code = 500, message = "O servidor encontrou uma condição inesperada que o impediu de atender à solicitação."),
@@ -47,7 +47,7 @@ public class LoginController {
      * @return
      */
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Refresh token !"),
+            @ApiResponse(code = 200, message = "Refresh token !"),
             @ApiResponse(code = 400, message = "Erro ao retornar token !"),
             @ApiResponse(code = 403, message = "Você não tem permissão a esta opção !"),
             @ApiResponse(code = 500, message = "O servidor encontrou uma condição inesperada que o impediu de atender à solicitação."),
