@@ -13,7 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
 
-import static com.backend.usuario.constants.SecurityConstants.*;
+import static com.backend.usuario.domain.constants.SecurityConstants.*;
 
 @Slf4j
 @Configuration

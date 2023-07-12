@@ -1,4 +1,4 @@
-package com.backend.usuario.constants;
+package com.backend.usuario.domain.constants;
 
 public class SecurityConstants {
     public static final String SECRET = "SECRET_KEY";
@@ -9,6 +9,8 @@ public class SecurityConstants {
     public static final String CREATE_USER_URL = "/api/save-user";
     public static final String TOKEN_URL = "/api/token";
     public static final String SWAGGER_UI = "/swaggerr-ui.html";
+    public static final String ACTIVE_ACCOUNT = "true";
+    public static final String DEACTIVE_ACCOUNT = "false";
     private SecurityConstants() {
     }
 }

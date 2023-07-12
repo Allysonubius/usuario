@@ -31,4 +31,6 @@ public class UserCreateUserRequest {
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Email inválido")
     private String email;
     private RoleUserRequest role ;
+    @JsonIgnore
+    private String active;
 }

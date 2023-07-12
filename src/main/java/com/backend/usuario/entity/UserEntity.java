@@ -6,7 +6,6 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.*;
 
 @Data
@@ -40,4 +39,7 @@ public class UserEntity implements Serializable {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_role", referencedColumnName = "role_id")
     private UserRoleEntity role;
+    @ApiModelProperty(value = "Conta ativa")
+    @Column(name="active", nullable = false)
+    private String active;
 }

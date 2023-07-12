@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.backend.usuario.domain.constants.SecurityConstants.ACTIVE_ACCOUNT;
+
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -65,6 +67,8 @@ public class UserMapper {
         }
         roleUserRequest.setId(userCreateUserRequest.getRole().getId());
         userCreateUserRequest.setRole(roleUserRequest);
+
+        userCreateUserRequest.setActive(ACTIVE_ACCOUNT);
 
         return this.modelMapper.map(userCreateUserRequest, UserEntity.class);
     }

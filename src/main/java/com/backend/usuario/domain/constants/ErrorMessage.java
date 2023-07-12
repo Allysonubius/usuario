@@ -1,4 +1,4 @@
-package com.backend.usuario.constants;
+package com.backend.usuario.domain.constants;
 
 public enum ErrorMessage {
     WRONGDATA("Input data is missing or is incorrect");

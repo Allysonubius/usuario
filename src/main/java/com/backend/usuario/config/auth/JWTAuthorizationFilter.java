@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-import static com.backend.usuario.constants.SecurityConstants.*;
+import static com.backend.usuario.domain.constants.SecurityConstants.*;
 
 @Slf4j
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {

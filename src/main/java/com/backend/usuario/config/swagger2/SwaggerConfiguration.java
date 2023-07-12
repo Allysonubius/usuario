@@ -10,7 +10,7 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import java.util.*;
-import static com.backend.usuario.constants.SecurityConstants.HEADER_STRING;
+import static com.backend.usuario.domain.constants.SecurityConstants.HEADER_STRING;
 
 @Configuration
 public class SwaggerConfiguration {

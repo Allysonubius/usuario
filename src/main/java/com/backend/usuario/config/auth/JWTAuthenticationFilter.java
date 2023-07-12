@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import com.auth0.jwt.JWT;
 
-import static com.backend.usuario.constants.SecurityConstants.*;
+import static com.backend.usuario.domain.constants.SecurityConstants.*;
 import static com.backend.usuario.util.PasswordGeneratorUtil.generateNewSecretKey;
 
 @Slf4j
