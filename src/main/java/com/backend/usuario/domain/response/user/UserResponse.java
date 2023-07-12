@@ -16,4 +16,5 @@ public class UserResponse {
     private String dateUpdate;
     private String email;
     private Set<RoleResponse> role;
+    private String active;
 }

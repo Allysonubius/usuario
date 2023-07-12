@@ -83,6 +83,8 @@ public class UserService {
             }
             response.setRole(roleResponses);
 
+            response.setActive(user.getActive());
+
             responseList.add(response);
         }
 
