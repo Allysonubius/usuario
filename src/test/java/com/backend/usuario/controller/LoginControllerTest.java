@@ -35,7 +35,7 @@ class LoginControllerTest {
     }
 
     @Test
-    public void testLoginUser_Success() {
+    void testLoginUser_Success() {
         UserLoginRequest loginRequest = new UserLoginRequest("username", "password");
 
         ResponseEntity<Object> responseEntity = ResponseEntity.status(HttpStatus.OK).body("Usuario logado com sucesso !");
@@ -49,7 +49,7 @@ class LoginControllerTest {
     }
 
     @Test
-    public void testRefreshUser_Success() {
+    void testRefreshUser_Success() {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getRemoteUser()).thenReturn("username");
 
@@ -65,7 +65,7 @@ class LoginControllerTest {
         assertEquals(new JwtResponse(token), response.getBody());
     }
     @Test
-    public void testRefreshUser_Exception() {
+    void testRefreshUser_Exception() {
         // Creating a mock HttpServletRequest
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getRemoteUser()).thenReturn("username");

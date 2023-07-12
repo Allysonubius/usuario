@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 class EmailValidatorUtilTest {
 
     @Test
-    public void testValidate_ValidEmail() {
+    void testValidate_ValidEmail() {
         EmailValidatorUtil util = new EmailValidatorUtil();
         String validEmail = "test@example.com";
 
@@ -20,7 +20,7 @@ class EmailValidatorUtilTest {
     }
 
     @Test
-    public void testConstructorWithNullMessage() {
+    void testConstructorWithNullMessage() {
         EmailValidatorUtil util = new EmailValidatorUtil();
         String validEmail = "test.email";
 

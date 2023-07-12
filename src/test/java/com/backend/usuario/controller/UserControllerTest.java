@@ -79,7 +79,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void testSaveUserController_InternalError() {
+    void testSaveUserController_InternalError() {
         // Creating a mock UserCreateUserRequest
         UserCreateUserRequest createUserRequest = new UserCreateUserRequest();
         createUserRequest.setUsername("teste");

@@ -57,9 +57,9 @@ class UserMapperTest {
 
         this.userMapper.toUserResponse(userEntity);
 
-        assertEquals(expectedResponse.getId(), "bb39dcdd-fd0e-4135-9c2f-f30d4ce407d3");
-        assertEquals(expectedResponse.getUsername(),"teste");
-        assertEquals(expectedResponse.getEmail(),"teste@gmail.com");
+        assertEquals("bb39dcdd-fd0e-4135-9c2f-f30d4ce407d3",expectedResponse.getId());
+        assertEquals("teste",expectedResponse.getUsername());
+        assertEquals("teste@gmail.com",expectedResponse.getEmail());
     }
 
     @Test
@@ -84,8 +84,8 @@ class UserMapperTest {
 
         this.userMapper.toUserRequest(request);
 
-        assertEquals(request.getUsername(), "teste");
-        assertEquals(request.getEmail(),"teste@gmail.com");
+        assertEquals("teste",request.getUsername());
+        assertEquals("teste@gmail.com",request.getEmail());
 
         assertNotNull("bb39dcdd-fd0e-4135-9c2f-f30d4ce407d3");
     }
