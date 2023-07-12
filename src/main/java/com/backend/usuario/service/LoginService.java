@@ -44,7 +44,7 @@ public class LoginService {
             log.info("loginUser() - Starting user login - username: {}", user.getUsername());
             Authentication authentication = this.authenticationManager.authenticate(authenticationToken(user.getUsername(), user.getPassword()));
             UserEntity userEntity = getUserByUsername(user.getUsername());
-            if (userEntity != null && userEntity.getActive() != null &&  userEntity.getActive().contains("true")){
+            if (userEntity != null && userEntity.getActive() != null &&  userEntity.getActive().contains(ACTIVE_ACCOUNT)){
                 SecurityContext securityContext = SecurityContextHolder.getContext();
                 // Verificar se o usuário está autenticado
                 if(securityContext.getAuthentication() != null && securityContext.getAuthentication().isAuthenticated()){
