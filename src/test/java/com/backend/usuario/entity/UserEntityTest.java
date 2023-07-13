@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.sql.Timestamp;
 import java.util.UUID;
+import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -19,60 +19,56 @@ class UserEntityTest {
     @BeforeEach
     public void setUp() {
         userEntity = mock(UserEntity.class);
-        userEntity.setId(UUID.fromString("90973e56-34c6-401d-a4c8-d0425c146335"));
-        userEntity.setUsername("allyson");
-        userEntity.setPassword("1234567890");
-        userEntity.setDateCreate(Timestamp.valueOf("2025-02-25 03:00:00"));
-        userEntity.setDateUpdate(Timestamp.valueOf("2025-02-25 03:00:00"));
     }
 
     @Test
-    void getId() {
-        when(userEntity.getId()).thenReturn(UUID.fromString("90973e56-34c6-401d-a4c8-d0425c146335"));
+    void testGettersAndSetters() {
+        UUID id = UUID.randomUUID();
+        String username = "testuser";
+        String password = "testpassword";
+        Date dateCreate = new Date();
+        Date dateUpdate = new Date();
+        String email = "test@example.com";
+        UserRoleEntity role = new UserRoleEntity(1L, "ADMIN");
+        String active = "true";
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(id);
+        userEntity.setUsername(username);
+        userEntity.setPassword(password);
+        userEntity.setDateCreate(dateCreate);
+        userEntity.setDateUpdate(dateUpdate);
+        userEntity.setEmail(email);
+        userEntity.setRole(role);
+        userEntity.setActive(active);
+
+        assertEquals(id, userEntity.getId());
+        assertEquals(username, userEntity.getUsername());
+        assertEquals(password, userEntity.getPassword());
+        assertEquals(dateCreate, userEntity.getDateCreate());
+        assertEquals(dateUpdate, userEntity.getDateUpdate());
+        assertEquals(email, userEntity.getEmail());
+        assertEquals(role, userEntity.getRole());
+        assertEquals(active, userEntity.getActive());
     }
 
     @Test
-    void getUsername() {
-        when(userEntity.getUsername()).thenReturn("allyson");
+    void testHashCode() {
+        UUID id = UUID.randomUUID();
+        UserEntity userEntity1 = new UserEntity(id, "testuser", "testpassword", new Date(), new Date(), "test@example.com", new UserRoleEntity(1L, "ADMIN"), "true");
+        UserEntity userEntity2 = new UserEntity(id, "testuser", "testpassword", new Date(), new Date(), "test@example.com", new UserRoleEntity(1L, "ADMIN"), "true");
+        UserEntity userEntity3 = new UserEntity(UUID.randomUUID(), "testuser", "testpassword", new Date(), new Date(), "test@example.com", new UserRoleEntity(1L, "ADMIN"), "true");
+
+        assertEquals(userEntity1.hashCode(), userEntity2.hashCode());
+        assertNotEquals(userEntity1.hashCode(), userEntity3.hashCode());
     }
 
     @Test
-    void getPassword() {
-        when(userEntity.getPassword()).thenReturn("1234567890");
+    void testToString() {
+        UUID id = UUID.randomUUID();
+        UserEntity userEntity = new UserEntity(id, "testuser", "testpassword", new Date(), new Date(), "test@example.com", new UserRoleEntity(1L, "ADMIN"), "true");
+        String expectedString = "UserEntity(id=" + id + ", username=testuser, password=testpassword, dateCreate=" + userEntity.getDateCreate() + ", dateUpdate=" + userEntity.getDateUpdate() + ", email=test@example.com, role=UserRoleEntity(id=1, role=ADMIN), active=true)";
+        assertEquals(expectedString, userEntity.toString());
     }
 
-    @Test
-    void getDateCreate() {
-        assertEquals(userEntity.getDateCreate(),userEntity.getDateCreate());
-    }
-
-    @Test
-    void getDateUpdate() {
-        assertEquals(userEntity.getDateUpdate(),userEntity.getDateUpdate());
-    }
-
-    @Test
-    void setId() {
-        verify(userEntity).setId(UUID.fromString("90973e56-34c6-401d-a4c8-d0425c146335"));
-    }
-
-    @Test
-    void setUsername() {
-       verify(userEntity).setUsername("allyson");
-    }
-
-    @Test
-    void setPassword() {
-        verify(userEntity).setPassword("1234567890");
-    }
-
-    @Test
-    void setDateCreate() {
-        verify(userEntity).setDateCreate(Timestamp.valueOf("2025-02-25 03:00:00"));
-    }
-
-    @Test
-    void setDateUpdate() {
-        verify(userEntity).setDateUpdate(Timestamp.valueOf("2025-02-25 03:00:00"));
-    }
 }

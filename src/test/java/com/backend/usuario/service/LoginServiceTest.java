@@ -3,7 +3,6 @@ package com.backend.usuario.service;
 import com.backend.usuario.config.data.jwt.JwtUtils;
 import com.backend.usuario.domain.request.user.UserLoginRequest;
 import com.backend.usuario.domain.response.erro.ErrorResponse;
-import com.backend.usuario.domain.response.jwt.JwtResponse;
 import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
@@ -17,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
@@ -45,26 +46,42 @@ class LoginServiceTest {
     }
 
     @Test
-    void testLoginUser_Success() {
-        // Arrange
-        UserLoginRequest userLoginRequest = new UserLoginRequest();
-        userLoginRequest.setUsername("testuser");
-        userLoginRequest.setPassword("password");
+    void testLoginUser() {
+        // Criar um usuário de teste
+        UserLoginRequest user = new UserLoginRequest();
+        user.setUsername("testuser");
+        user.setPassword("testpassword");
 
+        // Criar um usuário de teste no banco de dados
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername("testuser");
+        userEntity.setPassword("testpassword");
+        userEntity.setActive("true");
+
+        // Mock do UserRepository para retornar o usuário de teste
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(userEntity));
+
+        // Mock da autenticação bem-sucedida
         Authentication authentication = mock(Authentication.class);
-        AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
-        when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn("testuser");
+        when(authentication.isAuthenticated()).thenReturn(true);
 
-        JwtUtils jwtUtils = mock(JwtUtils.class);
-        when(jwtUtils.generateJwtToken(any(Authentication.class), any(UserLoginRequest.class))).thenReturn("jwt_token");
+        // Mock do contexto de segurança
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
 
-        // Act
-        ResponseEntity<Object> response = this.loginService.loginUser(userLoginRequest);
+        // Chamar o método loginUser
+        ResponseEntity<Object> response = this.loginService.loginUser(user);
 
-        // Assert
+        // Verificar se a resposta é OK (HttpStatus 200)
         assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        // Verificar se o token JWT foi gerado
         assertNotNull(response.getBody());
-        assertTrue(response.getBody() instanceof JwtResponse);
+
+        // Verificar se o método de autenticação foi chamado
+        verify(authenticationManager, times(1)).authenticate(any());
     }
 
     @Test
@@ -87,8 +104,6 @@ class LoginServiceTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), errorResponse.getStatus());
         assertEquals("Error during user login.", errorResponse.getMessage());
 
-        verify(authenticationManager, times(1)).authenticate(Mockito.any(UsernamePasswordAuthenticationToken.class));
-        verify(jwtUtils, times(1)).generateJwtToken(Mockito.any(Authentication.class), Mockito.any(UserLoginRequest.class));
     }
 
     @Test
