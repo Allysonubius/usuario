@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -66,8 +68,11 @@ public class UserService {
             UserResponse response = new UserResponse();
             response.setId(user.getId().toString());
             response.setUsername(user.getUsername());
-            response.setDateCreate(user.getDateCreate().toString());
-            response.setDateUpdate(user.getDateUpdate().toString());
+
+            response.setDateCreate(String.valueOf(user.getDateCreate()));
+            response.setDateUpdate(String.valueOf(user.getDateUpdate()));
+
+
             response.setEmail(user.getEmail());
 
             // Mapear list de roles
