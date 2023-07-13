@@ -27,8 +27,8 @@ public class ConfigAccountService {
     public UserEntity getUserActiveAccount(UUID userId) {
         Optional<UserEntity> optional = userRepository.findById(userId);
         if(!optional.isPresent()){
-            log.info("");
-            throw new UserServiceException("");
+            log.info("getUserDesativeAccount() - Usuário com ID {} não encontrado ", userId);
+            throw new UserServiceException("getUserDesativeAccount() - Usuário não encontrado");
         }
 
         UserEntity userEntity = optional.get();
@@ -39,6 +39,23 @@ public class ConfigAccountService {
         } else {
             log.error("User account is already active.");
             throw new UserServiceException("User account is already active.");
+        }
+    }
+
+    public UserEntity getUserDesativeAccount(UUID uuid){
+        Optional<UserEntity> optional = this.userRepository.findById(uuid);
+        if(!optional.isPresent()){
+            log.info("getUserDesativeAccount() - Usuário com ID {} não encontrado ", uuid);
+            throw new UserServiceException("getUserDesativeAccount() - Usuário não encontrado");
+        }
+
+        UserEntity userEntity = optional.get();
+        if(userEntity.getActive().equals(ACTIVE_ACCOUNT)){
+            userEntity.setActive(DEACTIVE_ACCOUNT);
+            return this.userRepository.save(userEntity);
+        }else {
+            log.error("User account is already desactive.");
+            throw new UserServiceException("User account is already desactive.");
         }
     }
 

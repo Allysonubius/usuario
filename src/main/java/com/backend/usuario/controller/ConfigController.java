@@ -40,7 +40,28 @@ public class ConfigController {
     public ResponseEntity<Object> activeAccount(@PathVariable("id") UUID id){
         try{
             this.configAccountService.getUserActiveAccount(id);
-            return ResponseEntity.status(HttpStatus.OK).body(id + " active !");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        }catch (UserServiceException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage(),"/api/active-user", LocalDateTime.now()));
+        }
+    }
+
+    /**
+     * @param id
+     * @return
+     */
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Usuario desativado com sucesso !"),
+            @ApiResponse(code = 400, message = "Usuário não encontrado !"),
+            @ApiResponse(code = 403, message = "Você não tem permissão !"),
+            @ApiResponse(code = 500, message = "O servidor encontrou uma condição inesperada que o impediu de atender à solicitação."),
+    })
+    @PostMapping(value = "/desactive-user/{id}")
+    @ApiOperation(value = "API REST - Activate USER")
+    public ResponseEntity<Object> desactiveAccount(@PathVariable("id") UUID id){
+        try{
+            this.configAccountService.getUserDesativeAccount(id);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (UserServiceException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage(),"/api/active-user", LocalDateTime.now()));
         }
