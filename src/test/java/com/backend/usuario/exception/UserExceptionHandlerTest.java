@@ -32,7 +32,7 @@ class UserExceptionHandlerTest {
 
         exceptionHandler.handleAccessDeniedException(response);
 
-        verify(response, times(1)).sendError(eq(HttpStatus.FORBIDDEN.value()), eq("Access denied"));
+        verify(response, times(1)).sendError(HttpStatus.FORBIDDEN.value(), "Access denied");
 
     }
 
