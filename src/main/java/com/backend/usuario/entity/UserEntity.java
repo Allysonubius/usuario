@@ -6,7 +6,8 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Entity
