@@ -50,6 +50,7 @@ public class ConfigAccountService {
         }
 
         UserEntity userEntity = optional.get();
+
         if(userEntity.getActive().equals(ACTIVE_ACCOUNT)){
             userEntity.setActive(DEACTIVE_ACCOUNT);
             return this.userRepository.save(userEntity);

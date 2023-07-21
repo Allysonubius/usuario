@@ -73,4 +73,53 @@ class ConfigAccountServiceTest {
         verify(userRepository, times(1)).findById(userId);
         verify(userRepository, never()).save(any(UserEntity.class));
     }
+
+    @Test
+    void testGetUserDesativeAccount_DesativeUserAccount() {
+        UUID userId = UUID.fromString("7c30d466-3e57-45d9-b8fb-e25379edfb80");
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userId);
+        userEntity.setActive("true");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userEntity));
+        when(userRepository.save(userEntity)).thenReturn(userEntity);
+
+        UserEntity result = configAccountService.getUserDesativeAccount(userId);
+
+        assertEquals(userId, result.getId());
+        assertEquals("false", result.getActive());
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(1)).save(userEntity);
+    }
+
+    @Test
+    void testGetUserDesativeAccount_UserNotFound() {
+        UUID userId = UUID.fromString("7c30d466-3e57-45d9-b8fb-e25379edfb80");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThrows(UserServiceException.class, () -> configAccountService.getUserDesativeAccount(userId));
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, never()).save(any(UserEntity.class));
+    }
+
+    @Test
+    void testGetUserDesativeAccount_UserAccountAlreadyActive() {
+        UUID userId = UUID.fromString("7c30d466-3e57-45d9-b8fb-e25379edfb80");
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userId);
+        userEntity.setActive("false");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userEntity));
+
+        assertThrows(UserServiceException.class, () -> configAccountService.getUserDesativeAccount(userId));
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, never()).save(any(UserEntity.class));
+    }
+
 }
