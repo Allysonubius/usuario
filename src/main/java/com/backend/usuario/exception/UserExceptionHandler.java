@@ -27,8 +27,6 @@ public class UserExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleInternalServerError(HttpServletRequest req, Exception e) {
-
-        LocalDateTime timestamp = LocalDateTime.now();
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 e.getMessage(),
