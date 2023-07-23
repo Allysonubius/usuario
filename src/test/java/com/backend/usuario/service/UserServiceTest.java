@@ -5,6 +5,7 @@ import com.backend.usuario.domain.response.user.UserResponse;
 import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.entity.UserRoleEntity;
 import com.backend.usuario.exception.UserServiceException;
+import com.backend.usuario.repository.UserCreationHistoryRepository;
 import com.backend.usuario.repository.UserRepository;
 import com.backend.usuario.repository.UserRoleRepository;
 import org.assertj.core.api.Assertions;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import javax.persistence.EntityManager;
+
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -32,12 +35,18 @@ class UserServiceTest {
     private UserRoleRepository userRoleRepository;
     @MockBean
     private UserService userService;
+    @MockBean
+    private UserCreationHistoryRepository userCreationHistoryRepository;
+    @MockBean
+    private EntityManager entityManager;
 
     @BeforeEach
     void setup(){
         userService = new UserService(
                 userRepository,
-                userRoleRepository);
+                userRoleRepository,
+                userCreationHistoryRepository,
+                entityManager);
     }
 
     @Test

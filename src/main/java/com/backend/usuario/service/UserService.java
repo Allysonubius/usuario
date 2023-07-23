@@ -12,7 +12,6 @@ import com.backend.usuario.repository.UserRepository;
 import com.backend.usuario.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +20,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
