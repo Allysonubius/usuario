@@ -3,7 +3,7 @@ package com.backend.usuario.config.auth;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.backend.usuario.config.data.DetalherUserData;
 import com.backend.usuario.domain.request.user.UserCreateUserRequest;
-import com.backend.usuario.entity.UserEntity;
+import com.backend.usuario.repository.entity.UserEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;

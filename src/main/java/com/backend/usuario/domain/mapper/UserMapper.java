@@ -3,7 +3,7 @@ package com.backend.usuario.domain.mapper;
 import com.backend.usuario.domain.request.role.RoleUserRequest;
 import com.backend.usuario.domain.request.user.UserCreateUserRequest;
 import com.backend.usuario.domain.response.user.UserResponse;
-import com.backend.usuario.entity.UserEntity;
+import com.backend.usuario.repository.entity.UserEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.service.UserService;
 import com.backend.usuario.util.EmailValidatorUtil;

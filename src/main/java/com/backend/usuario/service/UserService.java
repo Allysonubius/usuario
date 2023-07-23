@@ -3,11 +3,9 @@ package com.backend.usuario.service;
 import com.backend.usuario.domain.request.role.RoleUserRequest;
 import com.backend.usuario.domain.response.role.RoleResponse;
 import com.backend.usuario.domain.response.user.UserResponse;
-import com.backend.usuario.entity.UserCreationHistoryEntity;
-import com.backend.usuario.entity.UserEntity;
-import com.backend.usuario.entity.UserRoleEntity;
+import com.backend.usuario.repository.entity.UserEntity;
+import com.backend.usuario.repository.entity.UserRoleEntity;
 import com.backend.usuario.exception.UserServiceException;
-import com.backend.usuario.repository.UserCreationHistoryRepository;
 import com.backend.usuario.repository.UserRepository;
 import com.backend.usuario.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -30,8 +27,6 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
-    private final UserCreationHistoryRepository userCreationHistoryRepository;
-    private final EntityManager entityManager;
 
     /**
      * @param userEntity
@@ -46,11 +41,7 @@ public class UserService {
             Optional<UserEntity> optionalEmail = this.userRepository.findByEmail(userEntity.getEmail());
             checkIfEmailAlreadyExists(optionalEmail, userEntity);
 
-            saveUserCreationHistory(userEntity);
-
-            UserEntity savedUser = this.userRepository.save(userEntity);
-            log.info("saveUserService() - User saved successfully - user: {}", savedUser.toString());
-            return savedUser;
+            return this.userRepository.save(userEntity);
         } catch (UserServiceException e) {
             log.info("saveUserService() - Error when saving user - message: {}", e.getMessage());
             throw new UserServiceException("Error when saving user: " + e.getMessage());
@@ -58,23 +49,6 @@ public class UserService {
             log.error("saveUserService() - Unknown error when saving user - message: {}", e.getMessage());
             throw new UserServiceException("Unknown error when saving user: " + e.getMessage());
         }
-    }
-    @Transactional
-    public UserCreationHistoryEntity saveUserCreationHistory(UserEntity userEntity) {
-        // Se a entidade UserEntity estiver detached, torne-a managed usando o merge
-        if (!entityManager.contains(userEntity)) {
-            userEntity = entityManager.merge(userEntity);
-        }
-
-        UserCreationHistoryEntity history = new UserCreationHistoryEntity();
-        history.setIdUser(String.valueOf(userEntity.getId()));
-        history.setUsername(userEntity.getUsername());
-        history.setPassword(userEntity.getPassword());
-        history.setEmail(userEntity.getEmail());
-        history.setUserRole(userEntity.getRole().getId());
-        history.setDateCreated(new Date());
-
-        return userCreationHistoryRepository.save(history);
     }
     /**
      * @return

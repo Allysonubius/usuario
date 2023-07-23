@@ -4,7 +4,7 @@ import com.backend.usuario.domain.mapper.UserMapper;
 import com.backend.usuario.domain.request.user.UserCreateUserRequest;
 import com.backend.usuario.domain.response.erro.ErrorResponse;
 import com.backend.usuario.domain.response.user.UserResponse;
-import com.backend.usuario.entity.UserEntity;
+import com.backend.usuario.repository.entity.UserEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.*;
 
