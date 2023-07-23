@@ -4,7 +4,7 @@ import com.backend.usuario.config.data.jwt.JwtUtils;
 import com.backend.usuario.domain.request.user.UserLoginRequest;
 import com.backend.usuario.domain.response.erro.ErrorResponse;
 import com.backend.usuario.domain.response.jwt.JwtResponse;
-import com.backend.usuario.repository.entity.UserEntity;
+import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

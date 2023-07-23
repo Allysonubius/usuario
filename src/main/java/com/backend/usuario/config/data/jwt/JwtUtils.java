@@ -1,7 +1,7 @@
 package com.backend.usuario.config.data.jwt;
 
 import com.backend.usuario.domain.request.user.UserLoginRequest;
-import com.backend.usuario.repository.entity.UserEntity;
+import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
 import io.jsonwebtoken.*;

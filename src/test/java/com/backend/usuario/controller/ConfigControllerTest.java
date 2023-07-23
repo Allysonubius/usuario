@@ -1,8 +1,8 @@
 package com.backend.usuario.controller;
 
 import com.backend.usuario.domain.response.erro.ErrorResponse;
-import com.backend.usuario.repository.entity.UserEntity;
-import com.backend.usuario.repository.entity.UserRoleEntity;
+import com.backend.usuario.entity.UserEntity;
+import com.backend.usuario.entity.UserRoleEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
 import com.backend.usuario.service.ConfigAccountService;

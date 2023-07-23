@@ -2,8 +2,8 @@ package com.backend.usuario.service;
 
 import com.backend.usuario.domain.request.role.RoleUserRequest;
 import com.backend.usuario.domain.response.user.UserResponse;
-import com.backend.usuario.repository.entity.UserEntity;
-import com.backend.usuario.repository.entity.UserRoleEntity;
+import com.backend.usuario.entity.UserEntity;
+import com.backend.usuario.entity.UserRoleEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
 import com.backend.usuario.repository.UserRoleRepository;

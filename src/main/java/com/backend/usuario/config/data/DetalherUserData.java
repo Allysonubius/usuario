@@ -1,6 +1,6 @@
 package com.backend.usuario.config.data;
 
-import com.backend.usuario.repository.entity.UserEntity;
+import com.backend.usuario.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

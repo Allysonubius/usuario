@@ -1,7 +1,7 @@
 package com.backend.usuario.service.impl;
 
 import com.backend.usuario.config.data.DetalherUserData;
-import com.backend.usuario.repository.entity.UserEntity;
+import com.backend.usuario.entity.UserEntity;
 import com.backend.usuario.exception.UserServiceException;
 import com.backend.usuario.repository.UserRepository;
 import lombok.AllArgsConstructor;
