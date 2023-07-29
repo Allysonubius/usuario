@@ -22,25 +22,37 @@ public class UserEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_user", nullable = false, updatable = false, unique = true, columnDefinition = "VARCHAR(55)")
     protected UUID id;
+
     @ApiModelProperty(value = "Nome da pessoa")
     @Column(name = "username", nullable = false)
     private String username;
+
     @ApiModelProperty(value = "Senha da pessoa")
     @Column(name = "password", nullable = false)
     private String password;
+
     @ApiModelProperty(value = "Data de criação")
     @Column(name="date_create", nullable = false)
     private Date dateCreate;
+
     @ApiModelProperty(value = "Data de atualização")
     @Column(name="date_update", nullable = false)
     private Date dateUpdate;
+
     @ApiModelProperty(value = "Email da pessoa")
     @Column(name = "email", nullable = false)
     private String email;
+
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_role", referencedColumnName = "role_id")
     private UserRoleEntity role;
+
     @ApiModelProperty(value = "Conta ativa")
     @Column(name="active", nullable = false)
     private String active;
+
+    @ApiModelProperty(value = "Outros dados da pessoa")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "dados_id")
+    private UserDataEntity dados;
 }

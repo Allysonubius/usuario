@@ -1,5 +1,6 @@
 package com.backend.usuario.domain.mapper;
 
+import com.backend.usuario.domain.request.dados.UserDadosRequest;
 import com.backend.usuario.domain.request.role.RoleUserRequest;
 import com.backend.usuario.domain.request.user.UserCreateUserRequest;
 import com.backend.usuario.domain.response.user.UserResponse;
@@ -69,6 +70,18 @@ public class UserMapper {
         userCreateUserRequest.setRole(roleUserRequest);
 
         userCreateUserRequest.setActive(ACTIVE_ACCOUNT);
+
+        UserDadosRequest dadosRequest = new UserDadosRequest();
+        dadosRequest.setNomeCompleto(userCreateUserRequest.getDados().getNomeCompleto());
+        dadosRequest.setDataNascimento(userCreateUserRequest.getDados().getDataNascimento());
+        dadosRequest.setTelefone(userCreateUserRequest.getDados().getTelefone());
+        dadosRequest.setCelular(userCreateUserRequest.getDados().getCelular());
+        dadosRequest.setEndereco(userCreateUserRequest.getDados().getEndereco());
+        dadosRequest.setTrabalho(userCreateUserRequest.getDados().getTrabalho());
+        dadosRequest.setCep(userCreateUserRequest.getDados().getCep());
+        dadosRequest.setCpf(userCreateUserRequest.getDados().getCpf());
+
+        userCreateUserRequest.setDados(dadosRequest);
 
         return this.modelMapper.map(userCreateUserRequest, UserEntity.class);
     }
