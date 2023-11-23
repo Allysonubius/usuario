@@ -1,5 +1,6 @@
 package com.backend.usuario.service;
 
+import com.backend.usuario.domain.request.dados.UserDadosRequest;
 import com.backend.usuario.domain.request.role.RoleUserRequest;
 import com.backend.usuario.domain.response.role.RoleResponse;
 import com.backend.usuario.domain.response.user.UserResponse;
@@ -25,8 +26,45 @@ import java.util.*;
 @RequiredArgsConstructor
 @ControllerAdvice
 public class UserService {
+
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
+
+    /**
+     * @param username
+     * @return
+     */
+    public UserDadosRequest getDadosUser(String username){
+        log.info("getDadosUser() - Starting to search for user data");
+        Optional<UserEntity> userEntity = this.userRepository.findByUsername(String.valueOf(username));
+        if (userEntity.isPresent()) {
+            log.info("getDadosUser() - User found username : {}", username);
+            UserEntity user = userEntity.get();
+            return mapToUserDadosRequest(user);
+        } else {
+            log.info("getDadosUser() - User not found username : {}", username);
+            return null;
+        }
+    }
+
+    /**
+     * @param userEntity
+     * @return
+     */
+    private UserDadosRequest mapToUserDadosRequest(UserEntity userEntity) {
+        log.info("mapToUserDadosRequest() - Getting started mapping user data");
+        UserDadosRequest userDados = new UserDadosRequest();
+        userDados.setNomeCompleto(userEntity.getDados().getNomeCompleto());
+        userDados.setDataNascimento(userEntity.getDados().getDataNascimento());
+        userDados.setTelefone(userEntity.getDados().getTelefone());
+        userDados.setCelular(userEntity.getDados().getCelular());
+        userDados.setEndereco(userEntity.getDados().getEndereco());
+        userDados.setTrabalho(userEntity.getDados().getTrabalho());
+        userDados.setCep(userEntity.getDados().getCep());
+        userDados.setCpf(userEntity.getDados().getCpf());
+        log.info("mapToUserDadosRequest() - userDados : {} ",userDados);
+        return userDados;
+    }
 
     /**
      * @param userEntity
@@ -34,7 +72,7 @@ public class UserService {
      */
     public UserEntity saveUserService(UserEntity userEntity){
         try{
-            log.info("loginUser() - Starting saving new user - user:[{}]", userEntity.toString());
+            log.info("loginUser() - Starting saving new user - user : {}", userEntity.toString());
             Optional<UserEntity> optionalUsername = this.userRepository.findByUsername(userEntity.getUsername());
             checkIfUsernameAlreadyExists(optionalUsername, userEntity);
 
@@ -43,36 +81,30 @@ public class UserService {
 
             return this.userRepository.save(userEntity);
         } catch (UserServiceException e) {
-            log.info("saveUserService() - Error when saving user - message: {}", e.getMessage());
+            log.error("saveUserService() - Error when saving user - message : {} ", e.getMessage());
             throw new UserServiceException("Error when saving user: " + e.getMessage());
         } catch (Exception e) {
-            log.error("saveUserService() - Unknown error when saving user - message: {}", e.getMessage());
-            throw new UserServiceException("Unknown error when saving user: " + e.getMessage());
+            log.error("saveUserService() - Unknown error when saving user - message : {}", e.getMessage());
+            throw new UserServiceException("Unknown error when saving user : " + e.getMessage());
         }
     }
+
     /**
+     * @param pageable
      * @return
      */
     public Page<UserResponse> listUsers(Pageable pageable){
         log.info("listUsers() - Starting user list");
-
         Page<UserEntity> entityPage = listUsersRepository(pageable);
-
         List<UserEntity> userEntities = entityPage.getContent();
         List<UserResponse> responseList = new ArrayList<>();
-
         for(UserEntity user : userEntities){
             UserResponse response = new UserResponse();
             response.setId(user.getId().toString());
             response.setUsername(user.getUsername());
-
             response.setDateCreate(String.valueOf(user.getDateCreate()));
             response.setDateUpdate(String.valueOf(user.getDateUpdate()));
-
-
             response.setEmail(user.getEmail());
-
-            // Mapear list de roles
             Set<RoleResponse> roleResponses = new HashSet<>();
             if(user.getRole() != null){
                 RoleResponse roleResponse = new RoleResponse();
@@ -80,20 +112,19 @@ public class UserService {
                 roleResponse.setRole(user.getRole().getRole());
                 roleResponses.add(roleResponse);
             }else{
-                log.info("listUsers() - No Role found for user: {}", user.getRole());
+                log.error("listUsers() - No Role found for user: {}", user.getRole());
                 throw new UserServiceException("No role found for user : " + user.getRole());
             }
             response.setRole(roleResponses);
-
             response.setActive(user.getActive());
-
             responseList.add(response);
         }
-
-        log.info("listUsers() - Completed user list users:{}");
+        log.info("listUsers() - Completed user list users : {} " , responseList);
         return new PageImpl<>(responseList, pageable,entityPage.getTotalElements());
     }
+
     /**
+     * @param pageable
      * @return
      */
     private Page<UserEntity> listUsersRepository(Pageable pageable){
@@ -115,7 +146,7 @@ public class UserService {
             deleteUserSearch(id);
             this.userRepository.deleteById(id);
         }catch (UserServiceException e){
-            log.info("deleteUser() - Failed to delete user ID:{}. Reason: {}", id, e.getMessage());
+            log.error("deleteUser() - Failed to delete user ID:{}. Reason: {}", id, e.getMessage());
             throw new UserServiceException("Failed to delete user ID: " + id);
         }
     }
@@ -131,6 +162,7 @@ public class UserService {
         log.info("getRoleById() - Role found - id:{}", id);
         return roleUser;
     }
+
     /**
      * @param id
      */

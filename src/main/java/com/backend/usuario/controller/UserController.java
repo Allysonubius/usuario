@@ -1,6 +1,7 @@
 package com.backend.usuario.controller;
 
 import com.backend.usuario.domain.mapper.UserMapper;
+import com.backend.usuario.domain.request.dados.UserDadosRequest;
 import com.backend.usuario.domain.request.user.UserCreateUserRequest;
 import com.backend.usuario.domain.response.erro.ErrorResponse;
 import com.backend.usuario.domain.response.user.UserResponse;
@@ -11,12 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Stream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +20,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Stream;
 @Slf4j
 @RestController
 @RequestMapping(value = "/api")
@@ -32,8 +32,10 @@ import javax.validation.Valid;
 @Api(value = "API REST User")
 @ControllerAdvice
 public class UserController {
+
     private final UserService userService;
     private final UserMapper userMapper;
+
     /**
      * @param userCreateUserRequest
      * @return
@@ -107,5 +109,18 @@ public class UserController {
         }catch (UserServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @GetMapping("/dados-usuario")
+    public ResponseEntity<UserDadosRequest> getDadosUsuario(Principal principal) {
+
+        if (!principal.getName().isEmpty()) {
+            UserDadosRequest userDados = userService.getDadosUser(principal.getName());
+            if (userDados != null) {
+                return ResponseEntity.ok(userDados);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
     }
 }

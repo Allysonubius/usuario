@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/login-user").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/save-user").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/api/delete-user/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .antMatchers("/swagger-ui/***").permitAll()
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()

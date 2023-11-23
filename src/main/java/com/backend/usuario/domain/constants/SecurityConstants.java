@@ -2,7 +2,7 @@ package com.backend.usuario.domain.constants;
 
 public class SecurityConstants {
     public static final String SECRET = "SECRET_KEY";
-    public static final long EXPIRATION_TIME = 1800000; // 15 minutes
+    public static final long EXPIRATION_TIME = 900000; // 15 minutes
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String SIGN_USER_URL = "/api/login-user";

@@ -34,7 +34,10 @@ public class JwtUtils {
         }
 
         Claims claims = Jwts.claims().setSubject(authentication.getName());
-        claims.put("auth", optionalUser.stream().map(s -> new SimpleGrantedAuthority(s.getRole().getRole())).filter(Objects::nonNull).toList());
+        claims.put("auth", optionalUser.stream()
+                .map(s -> new SimpleGrantedAuthority(s.getRole().getRole()))
+                .filter(Objects::nonNull)
+                .toList());
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + EXPIRATION_TIME);
@@ -43,7 +46,7 @@ public class JwtUtils {
         JwtBuilder jwt =  Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setSubject(userPrincipal.toString())
+                .setSubject(user.getUsername())
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, SECRET);
         log.info("generateJwtToken() - Finishing generating json web token - authentication:{}", authentication.isAuthenticated());
